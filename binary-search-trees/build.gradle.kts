@@ -9,9 +9,6 @@
 plugins {
     // Apply the org.jetbrains.kotlin.jvm Plugin to add support for Kotlin.
     id("org.jetbrains.kotlin.jvm") version "1.5.0"
-
-    // Apply the application plugin to add support for building a CLI application in Java.
-    application
 }
 
 repositories {
@@ -31,10 +28,4 @@ dependencies {
 
     // Use the Kotlin JUnit integration.
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit")
-    implementation(project(":binary-search-trees"))
-}
-
-application {
-    // Define the main class for the application.
-    mainClass.set("app:AppKt")
 }
