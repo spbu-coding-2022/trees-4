@@ -11,7 +11,12 @@ mergeable:
           count: 1
         required:
           assignees: true
+
+  - when: pull_request.opened
+    name: "Remind about contributing guidelines"
+    validate: [ ]
+    pass:
       - do: comment
         payload:
           body: >
-            Thanks for creating a pull request! A maintainer will review your changes shortly. Please don't be discouraged if it takes a while.
+            Thanks for creating a pull request! Please, check that your pull request meets the [CONTRIBUTING](./CONTRIBUTING.md) requirements.
