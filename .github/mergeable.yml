@@ -9,13 +9,10 @@ mergeable:
             boolean:
               match: false
     pass:
-        validate:
-          - do: description
-            no_empty:
-              enabled: true
-              message: "Description matter and should not be empty. Provide detail with **what** was changed, **why** it was changed, and **how** it was changed."
-          - do: approvals
-            min:
-              count: 1
-            required:
-            assignees: true
+      - do: comment
+        payload:
+          body: This PR is NOT a draft!
+    fail:
+      - do: comment
+        payload:
+          body: This PR is STILL a draft!
