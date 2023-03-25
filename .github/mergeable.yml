@@ -11,6 +11,12 @@ mergeable:
           count: 1
         required:
           assignees: true
-     - do: comment
+
+  - when: pull_request.opened
+    name: "Remind about contributing guidelines"
+    validate: [ ]
+    pass:
+      - do: comment
         payload:
-        body: "Check that your pull request meets the [CONTRIBUTING](./CONTRIBUTING.md) requirements"
+          body: >
+            Thanks for creating a pull request! Please, check that your pull request meets the [CONTRIBUTING](./CONTRIBUTING.md) requirements.
