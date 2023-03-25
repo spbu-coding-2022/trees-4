@@ -15,9 +15,10 @@ mergeable:
         payload:
           body: >
             Thanks for creating a pull request! Please, check that your pull request meets the [CONTRIBUTING](./CONTRIBUTING.md) requirements.
-            
+
+
   - when: pull_request.*, pull_request_review.*
-    name: 'Draft approvals'
+    name: 'Draft check'
     validate:
       - do: payload
         pull_request:
@@ -30,3 +31,4 @@ mergeable:
           count: 1
         required:
           assignees: true
+    fail: [ ]
