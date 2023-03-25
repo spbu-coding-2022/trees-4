@@ -6,11 +6,6 @@ mergeable:
         no_empty:
           enabled: true
           message: "Description matter and should not be empty. Provide detail with **what** was changed, **why** it was changed, and **how** it was changed."
-      - do: approvals
-        min:
-          count: 1
-        required:
-          assignees: true
 
   - when: pull_request.opened
     name: "Remind about contributing guidelines"
@@ -20,3 +15,18 @@ mergeable:
         payload:
           body: >
             Thanks for creating a pull request! Please, check that your pull request meets the [CONTRIBUTING](./CONTRIBUTING.md) requirements.
+            
+  - when: pull_request.*, pull_request_review.*
+    name: 'Draft approvals'
+    validate:
+      - do: payload
+        pull_request:
+          draft:
+            boolean:
+              match: false
+    pass:
+      - do: approvals
+        min:
+          count: 1
+        required:
+          assignees: true
