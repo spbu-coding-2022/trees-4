@@ -13,4 +13,5 @@ mergeable:
           assignees: true
       - do: comment
         payload:
-          body: "Check that your pull request meets the [CONTRIBUTING](./CONTRIBUTING.md) requirements"
+          body: > 
+            "Check that your pull request meets the [CONTRIBUTING](./CONTRIBUTING.md) requirements"
