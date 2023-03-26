@@ -19,7 +19,11 @@ jobs:
       - uses: actions/upload-artifact@v3
         if: ${{ github.ref == 'refs/heads/main' }}
         with:
-          name: Package
-          path: |
-            app/build/libs/app-all.jar
-            binary-search-trees/build/libs/binary-search-trees.jar
+          name: All in one jar
+          path: app/build/libs/app-all.jar
+
+      - uses: actions/upload-artifact@v3
+        if: ${{ github.ref == 'refs/heads/main' }}
+        with:
+          name: Binary search trees lib jar
+          path: binary-search-trees/build/libs/binary-search-trees.jar
