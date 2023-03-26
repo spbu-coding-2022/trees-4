@@ -2,8 +2,6 @@ name: Run full build
 
 on:
   push:
-    branches:
-      - main
 jobs:
   build-gradle-project:
     runs-on: ubuntu-latest
@@ -14,9 +12,14 @@ jobs:
         uses: gradle/gradle-build-action@v2
       - name: Run build with Gradle Wrapper
         run: ./gradlew build
+      - name: Create fat .jar file on main
+        if: ${{ github.ref == 'refs/heads/main' }}
+        run: ./gradlew app:buildFatJar
+
       - uses: actions/upload-artifact@v3
+        if: ${{ github.ref == 'refs/heads/main' }}
         with:
           name: Package
           path: |
-            app/build/libs
-            binary-search-trees/build/libs
+            app/build/libs/app-all.jar
+            binary-search-trees/build/libs/binary-search-trees.jar
