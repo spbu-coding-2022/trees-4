@@ -1,6 +1,14 @@
 version: 2
 mergeable:
   - when: pull_request.*, pull_request_review.*
+    filter:
+      # ignore 'Feedback' PR
+      - do: payload
+        pull_request:
+          title:
+            must_exclude:
+              regex: ^Feedback$
+              regex_flag: none
     validate:
       - do: description
         no_empty:
