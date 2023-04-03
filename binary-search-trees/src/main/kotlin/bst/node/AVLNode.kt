@@ -1,6 +1,6 @@
 package bst.node
 
-internal data class AVLNode<E : Comparable<E>>(
+internal class AVLNode<E : Comparable<E>>(
     override var value: E,
     override var height: Int = 1,
     override var left: AVLTreeNode<E>? = null,
