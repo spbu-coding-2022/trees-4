@@ -10,6 +10,9 @@ class WrappedRBNode<E : Comparable<E>>(private val node: RedBlackTreeNode<E>) :
     override val value: E
         get() = node.value
 
+    val parent: WrappedRBNode<E>?
+        get() = node.parent?.let { WrappedRBNode(it) }
+
     override val left: WrappedRBNode<E>?
         get() = node.left?.let { WrappedRBNode(it) }
 
