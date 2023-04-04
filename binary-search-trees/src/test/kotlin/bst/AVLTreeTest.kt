@@ -29,7 +29,6 @@ class AVLTreeTest {
             tree.add(v, unique)
             assertTrue(InvariantChecker.isBinarySearchTree(tree))
             assertTrue(InvariantChecker.checkNeighborHeights(tree.wrappedRoot))
-
         }
     }
 
@@ -50,6 +49,7 @@ class AVLTreeTest {
         for (v in values) {
             tree.remove(v)
             assertTrue(InvariantChecker.isBinarySearchTree(tree))
+            assertTrue(InvariantChecker.checkNeighborHeights(tree.wrappedRoot))
         }
 
         assertEquals(null, tree.wrappedRoot) // Tree is empty
@@ -68,12 +68,5 @@ class AVLTreeTest {
         }
 
         assertEquals(0, tree.iterator().asSequence().toList().size)
-    }
-
-    @Test
-    fun `test value heights`() {
-        for (v in values) {
-            tree.add(v)
-        }
     }
 }
