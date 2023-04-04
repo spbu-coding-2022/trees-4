@@ -1,51 +1,79 @@
-import bst.AVLTree
-import org.junit.Assert.assertEquals
-import org.junit.Test
+package bst
+
+import utils.InvariantChecker
+import kotlin.random.Random
+import kotlin.test.*
+
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.ValueSource
 
 class AVLTreeTest {
-    @Test
-    fun `test adding elements to the tree`() {
-        val tree = AVLTree<Int>()
-        tree.add(5)
-        tree.add(3)
-        tree.add(7)
-        tree.add(2)
-        tree.add(4)
-        tree.add(6)
-        tree.add(8)
+    companion object {
+        const val defaultSeed = 42
+    }
 
-        assertEquals(tree.wrappedRoot?.value, 5)
-        assertEquals(tree.wrappedRoot?.left?.value, 3)
-        assertEquals(tree.wrappedRoot?.right?.value, 7)
-        assertEquals(tree.wrappedRoot?.left?.left?.value, 2)
-        assertEquals(tree.wrappedRoot?.left?.right?.value, 4)
-        assertEquals(tree.wrappedRoot?.right?.left?.value, 6)
-        assertEquals(tree.wrappedRoot?.right?.right?.value, 8)
+    private lateinit var tree: AVLTree<Int>
+    private lateinit var values: Array<Int>
+    private val randomizer = Random(defaultSeed)
+
+    @BeforeTest
+    fun init() {
+        values = Array(1000) { randomizer.nextInt(10) }
+        tree = AVLTree()
+    }
+
+    @ParameterizedTest(name = "Are unique elements added: {0}")
+    @ValueSource(booleans = [true, false])
+    fun `test values addition invariant`(unique: Boolean) {
+        for (v in values) {
+            tree.add(v, unique)
+            assertTrue(InvariantChecker.isBinarySearchTree(tree))
+            assertTrue(InvariantChecker.checkNeighborHeights(tree.wrappedRoot))
+
+        }
     }
 
     @Test
-    fun `test removing elements from the tree`() {
-        val tree = AVLTree<Int>()
-        tree.add(5)
-        tree.add(3)
-        tree.add(7)
-        tree.add(2)
-        tree.add(4)
-        tree.add(6)
-        tree.add(8)
+    fun `test all added values are unique`() {
+        for (v in values) {
+            tree.add(v, unique = true)
+        }
+        assertEquals(values.sorted().distinct(), tree.iterator().asSequence().toList())
+        // Don't use toSet in `actual` part of assertEquals because of false-positive effect
+    }
 
-        tree.remove(2)
-        tree.remove(4)
-        tree.remove(6)
+    @ParameterizedTest(name = "Are unique elements added: {0}")
+    @ValueSource(booleans = [true, false])
+    fun `test values deletion invariant`(unique: Boolean) {
+        values.forEach { tree.add(it, unique) }
+        values.shuffle()
+        for (v in values) {
+            tree.remove(v)
+            assertTrue(InvariantChecker.isBinarySearchTree(tree))
+        }
 
-        assertEquals(tree.wrappedRoot?.value, 5)
-        assertEquals(tree.wrappedRoot?.left?.value, 3)
-        assertEquals(tree.wrappedRoot?.right?.value, 7)
-        assertEquals(tree.wrappedRoot?.left?.left, null)
-        assertEquals(tree.wrappedRoot?.left?.right, null)
-        assertEquals(tree.wrappedRoot?.right?.left, null)
-        assertEquals(tree.wrappedRoot?.right?.right?.value, 8)
+        assertEquals(null, tree.wrappedRoot) // Tree is empty
+    }
+
+    @Test
+    fun `test values are being removed gradually`() {
+        val uniqueValues = values.toSet()
+        var countOfUniqueValues = uniqueValues.size
+        values.forEach { tree.add(it, unique = true) }
+
+        for (v in uniqueValues) {
+            assertEquals(countOfUniqueValues, tree.iterator().asSequence().toList().size)
+            tree.remove(v)
+            countOfUniqueValues--
+        }
+
+        assertEquals(0, tree.iterator().asSequence().toList().size)
+    }
+
+    @Test
+    fun `test value heights`() {
+        for (v in values) {
+            tree.add(v)
+        }
     }
 }
-
-

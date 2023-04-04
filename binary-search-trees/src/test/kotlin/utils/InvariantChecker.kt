@@ -2,8 +2,10 @@ package utils
 
 import bst.BinarySearchTree
 import bst.node.BinTreeNode
+import bst.wrapper.WrappedAVLNode
 import bst.wrapper.WrappedBinNode
 import java.util.*
+import kotlin.math.abs
 
 object InvariantChecker {
     fun <E : Comparable<E>, NodeType : BinTreeNode<E, NodeType>, WrappedType : WrappedBinNode<E, WrappedType>> // python actually is better
@@ -30,5 +32,29 @@ object InvariantChecker {
         }
 
         return true
+    }
+
+    fun <E: Comparable<E>> checkNeighborHeights(node: WrappedAVLNode<E>?): Boolean {
+        if (node == null) {
+            return true
+        }
+
+        val leftHeight = calculateHeight(node.left)
+        val rightHeight = calculateHeight(node.right)
+
+        if (abs(leftHeight - rightHeight) > 1) {
+            return false
+        }
+
+        return checkNeighborHeights(node.left) && checkNeighborHeights(node.right)
+    }
+
+    private fun <T : Comparable<T>> calculateHeight(node: WrappedAVLNode<T>?): Int {
+        if (node == null) {
+            return 0
+        }
+        val leftHeight = calculateHeight(node.left)
+        val rightHeight = calculateHeight(node.right)
+        return 1 + maxOf(leftHeight, rightHeight)
     }
 }
