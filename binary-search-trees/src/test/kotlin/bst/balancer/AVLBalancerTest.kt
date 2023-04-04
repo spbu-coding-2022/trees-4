@@ -8,7 +8,7 @@ import org.junit.Test
 class AVLBalancerTest {
     private val balancer = AVLBalancer<Int>()
     @Test
-    fun `test add`() {
+    fun `test method 'add' in avl tree balancer`() {
         val root = AVLNode(5)
         balancer.add(root, 3, true)
         balancer.add(root, 7, true)
@@ -16,6 +16,16 @@ class AVLBalancerTest {
         balancer.add(root, 4, true)
         balancer.add(root, 6, true)
         balancer.add(root, 8, true)
+
+        /*
+             constructed tree:
+                    5
+                 /      \
+               3         7
+             /   \      /  \
+            2     4    6    8
+         */
+
         assertEquals(5, root.value)
         assertEquals(3, root.left?.value)
         assertEquals(2, root.left?.left?.value)
@@ -26,7 +36,7 @@ class AVLBalancerTest {
     }
 
     @Test
-    fun `test remove`() {
+    fun `test method 'remove' in avl tree balancer`() {
         val root = AVLNode(5)
         balancer.add(root, 3, true)
         balancer.add(root, 7, true)
@@ -34,7 +44,27 @@ class AVLBalancerTest {
         balancer.add(root, 4, true)
         balancer.add(root, 6, true)
         balancer.add(root, 8, true)
+
+        /*
+            constructed tree:
+                    5
+                 /      \
+               3         7
+             /   \      /  \
+            2     4    6    8
+         */
+
         balancer.remove(root, 2)
+
+        /*
+            constructed tree:
+                    5
+                 /      \
+               3         7
+                 \      /  \
+                  4    6    8
+         */
+
         assertEquals(5, root.value)
         assertEquals(3, root.left?.value)
         assertNull(root.left?.left)
