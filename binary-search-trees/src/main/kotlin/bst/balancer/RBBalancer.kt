@@ -4,53 +4,84 @@ import bst.node.RBNode
 import bst.node.RedBlackTreeNode
 
 class RBBalancer<E : Comparable<E>> : BinTreeBalancer<E, RedBlackTreeNode<E>> {
+    override fun add(root: RedBlackTreeNode<E>?, value: E, unique: Boolean): RedBlackTreeNode<E> {
+        val newNode = RBNode(value)
+
+        fun addToSubtree(subtree: RedBlackTreeNode<E>?): RedBlackTreeNode<E> {
+            val node = subtree ?: return newNode
+
+            if (value < node.value) node.left = addToSubtree(node.left).also { it.parent = node }
+            else if (value > node.value) node.right = addToSubtree(node.right).also { it.parent = node }
+            else {
+                if (unique) node.value = value
+                else node.right = addToSubtree(node.right).also { it.parent = node }
+            }
+
+            return node
+        }
+
+        return fixAfterInsertion(newNode, addToSubtree(root))
+            ?: throw Exception("after insertion root must be not null")
+    }
+
     private fun rotateLeft(node: RedBlackTreeNode<E>?, root: RedBlackTreeNode<E>?): RedBlackTreeNode<E>? {
-        val child = node?.right ?: return root
+        val rightChild = node?.right ?: return null
+        node.right = rightChild.left
+
+        if (rightChild.left != null) {
+            rightChild.left?.parent = node
+        }
+
+        rightChild.parent = node.parent
         var newRoot = root
 
-        node.right = child.left
-        child.left?.parent = node
-        child.parent = node.parent
-
-        if (node.parent == null) newRoot = child
-        else {
-            if (node == node.parent?.left) node.parent?.left = child
-            else node.parent?.right = child
+        if (node.parent == null) {
+            newRoot = rightChild
+        } else if (node === node.parent?.left) {
+            node.parent?.left = rightChild
+        } else {
+            node.parent?.right = rightChild
         }
-        child.left = node
-        node.parent = child
 
-
+        rightChild.left = node
+        node.parent = rightChild
 
         return newRoot
     }
 
     private fun rotateRight(node: RedBlackTreeNode<E>?, root: RedBlackTreeNode<E>?): RedBlackTreeNode<E>? {
-        val child = node?.left ?: return root
-        var newRoot = root
+        val leftChild = node?.left ?: return null
+        node.left = leftChild.right
 
-        node.left = child.right
-        child.right?.parent = node
-        child.parent = node.parent
-
-        if (node.parent == null) newRoot = child
-        else {
-            if (node == node.parent?.left) node.parent?.left
-            else node.parent?.right = child
+        if (leftChild.right != null) {
+            leftChild.right?.parent = node
         }
 
-        child.right = node
-        node.parent = child
+        leftChild.parent = node.parent
+        var newRoot = root
+
+        if (node.parent == null) {
+            // node was the root of the tree
+            newRoot = leftChild
+        } else if (node === node.parent?.right) {
+            node.parent?.right = leftChild
+        } else {
+            node.parent?.left = leftChild
+        }
+
+        leftChild.right = node
+        node.parent = leftChild
+
         return newRoot
     }
 
     private fun fixAfterInsertion(node: RedBlackTreeNode<E>, root: RedBlackTreeNode<E>): RedBlackTreeNode<E>? {
-        if (node.parent == null) return root
+        if (node.parent == null) return root.also { it.color = RedBlackTreeNode.Color.BLACK }
         var current: RedBlackTreeNode<E>? = node
         var newRoot: RedBlackTreeNode<E>? = root
 
         while (current?.parent?.color == RedBlackTreeNode.Color.RED) {
-            if (current.parent == current.parent?.parent?.left) {
+            if (current.parent === current.parent?.parent?.left) {
                 val uncle = current.parent?.parent?.right
                 if (uncle?.color == RedBlackTreeNode.Color.RED) {
                     current.parent?.color = RedBlackTreeNode.Color.BLACK
@@ -90,49 +121,55 @@ class RBBalancer<E : Comparable<E>> : BinTreeBalancer<E, RedBlackTreeNode<E>> {
         return newRoot
     }
 
-    override fun add(root: RedBlackTreeNode<E>?, value: E, unique: Boolean): RedBlackTreeNode<E> {
-        val newNode = RBNode(value)
+    override fun remove(root: RedBlackTreeNode<E>?, value: E): RedBlackTreeNode<E>? {
+        var node = findNode(root, value) ?: return root
+        val color = node.color
+        var newRoot = root
 
-        fun addToSubtree(subtree: RedBlackTreeNode<E>?): RedBlackTreeNode<E> {
-            val node = subtree ?: return newNode
+        if (node.left != null && node.right != null) {
+            val successor = minValueNode(node.right ?: throw Exception("node.right must be not null"))
+            node = successor
+        }
 
-            if (value < node.value) node.left = addToSubtree(node.left).also { it.parent = node }
-            else if (value > node.value) node.right = addToSubtree(node.right).also { it.parent = node }
-            else {
-                if (unique) node.value = value
-                else node.right = addToSubtree(node.right).also { it.parent = node }
+        val replacement = node.left ?: node.right
+
+        if (replacement != null) {
+            if (node.parent == null) {
+                newRoot = replacement
+            } else if (node === node.parent?.left) {
+                node.parent?.left = replacement
+            } else {
+                node.parent?.right = replacement
             }
-
-            return node
+            if (color == RedBlackTreeNode.Color.BLACK) {
+                newRoot = fixAfterDeletion(replacement, newRoot)
+            }
+        } else if (node.parent == null) {
+            newRoot = null
+        } else {
+            if (color == RedBlackTreeNode.Color.BLACK) {
+                newRoot = fixAfterDeletion(node, newRoot)
+            }
+            if (node.parent != null) {
+                if (node === node.parent?.left) {
+                    node.parent?.left = null
+                } else if (node === node.parent?.right) {
+                    node.parent?.right = null
+                }
+                node.parent = null
+            }
         }
-
-        return fixAfterInsertion(newNode, addToSubtree(root))
-            ?: throw Exception("after insertion root must be not null")
+        return newRoot
     }
 
-    private fun findNode(node: RedBlackTreeNode<E>?, value: E): RedBlackTreeNode<E>? {
-        node ?: return null
-        if (value == node.value) {
-            return node
-        }
-        return findNode(if (value < node.value) node.left else node.right, value)
-    }
-
-    private fun minValueNode(node: RedBlackTreeNode<E>): RedBlackTreeNode<E> {
-        var current = node
-        while (true) {
-            current = current.left ?: break
-        }
-        return current
-    }
 
     private fun fixAfterDeletion(node: RedBlackTreeNode<E>?, root: RedBlackTreeNode<E>?): RedBlackTreeNode<E>? {
         var newRoot = root
         var current = node
         var sibling: RedBlackTreeNode<E>?
 
-        while (current != newRoot && current?.color == RedBlackTreeNode.Color.BLACK) {
-            if (current == current.parent?.left) {
+        while (current !== newRoot && current?.color == RedBlackTreeNode.Color.BLACK) {
+            if (current === current.parent?.left) {
                 sibling = current.parent?.right
                 if (sibling?.color == RedBlackTreeNode.Color.RED) {
                     sibling.color = RedBlackTreeNode.Color.BLACK
@@ -183,37 +220,22 @@ class RBBalancer<E : Comparable<E>> : BinTreeBalancer<E, RedBlackTreeNode<E>> {
             }
         }
         current?.color = RedBlackTreeNode.Color.BLACK
-
         return newRoot
     }
 
-    override fun remove(root: RedBlackTreeNode<E>?, value: E): RedBlackTreeNode<E>? {
-        val node = findNode(root, value) ?: return root
-        val successor: RedBlackTreeNode<E>
-
-        if (node.left == null || node.right == null)
-            successor = node
-        else {
-            successor = minValueNode(node.right ?: throw Exception("node.right must be not null"))
-            node.value = successor.value
+    private fun findNode(node: RedBlackTreeNode<E>?, value: E): RedBlackTreeNode<E>? {
+        node ?: return null
+        if (value == node.value) {
+            return node
         }
-
-        val child = successor.left ?: successor.right
-
-        child?.parent = successor.parent
-        var newRoot = if (successor.parent == null) child else root
-
-        if (successor == successor.parent?.left) {
-            successor.parent?.left = child
-        } else {
-            successor.parent?.right = child
-        }
-
-        if (successor.color == RedBlackTreeNode.Color.BLACK) {
-            newRoot = fixAfterDeletion(child, newRoot)
-        }
-
-        return newRoot
+        return findNode(if (value < node.value) node.left else node.right, value)
     }
 
+    private fun minValueNode(node: RedBlackTreeNode<E>): RedBlackTreeNode<E> {
+        var current = node
+        while (true) {
+            current = current.left ?: break
+        }
+        return current
+    }
 }
