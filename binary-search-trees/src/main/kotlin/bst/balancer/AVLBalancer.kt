@@ -1,8 +1,8 @@
 package bst.balancer
 
-import kotlin.math.max
-import bst.node.AVLTreeNode
 import bst.node.AVLNode
+import bst.node.AVLTreeNode
+import kotlin.math.max
 
 internal class AVLBalancer<E : Comparable<E>> : BinTreeBalancer<E, AVLTreeNode<E>> {
     override fun add(root: AVLTreeNode<E>?, value: E, unique: Boolean): AVLTreeNode<E> {

@@ -6,14 +6,11 @@ import bst.iterator.LevelOrderIterator
 import bst.iterator.PreOrderIterator
 import bst.node.BinTreeNode
 
-abstract class BinarySearchTree<E : Comparable<E>, NodeType : BinTreeNode<E, NodeType>, WrappedType>(
+abstract class BinarySearchTree<E : Comparable<E>, NodeType : BinTreeNode<E, NodeType>>(
     protected val balancer: BinTreeBalancer<E, NodeType>,
-    protected val wrap: (NodeType) -> WrappedType
 ) {
-    protected var root: NodeType? = null
-
-    open val wrappedRoot: WrappedType?
-        get() = root?.let { wrap(it) }
+    var root: NodeType? = null
+        internal set
 
     open fun add(value: E, unique: Boolean = false) {
         root = balancer.add(root, value, unique)
