@@ -25,7 +25,7 @@ class RBBalancer<E : Comparable<E>> : BinTreeBalancer<E, RedBlackTreeNode<E>> {
     }
 
     private fun rotateLeft(node: RedBlackTreeNode<E>?, root: RedBlackTreeNode<E>?): RedBlackTreeNode<E>? {
-        val rightChild = node?.right ?: return null
+        val rightChild = node?.right ?: throw Exception("node right must be not null")
         node.right = rightChild.left
 
         if (rightChild.left != null) {
@@ -50,7 +50,7 @@ class RBBalancer<E : Comparable<E>> : BinTreeBalancer<E, RedBlackTreeNode<E>> {
     }
 
     private fun rotateRight(node: RedBlackTreeNode<E>?, root: RedBlackTreeNode<E>?): RedBlackTreeNode<E>? {
-        val leftChild = node?.left ?: return null
+        val leftChild = node?.left ?: throw Exception("node left must be not null")
         node.left = leftChild.right
 
         if (leftChild.right != null) {
@@ -122,104 +122,107 @@ class RBBalancer<E : Comparable<E>> : BinTreeBalancer<E, RedBlackTreeNode<E>> {
     }
 
     override fun remove(root: RedBlackTreeNode<E>?, value: E): RedBlackTreeNode<E>? {
-        var node = findNode(root, value) ?: return root
-        val color = node.color
+        var current = findNode(root, value) ?: return null
         var newRoot = root
 
-        if (node.left != null && node.right != null) {
-            val successor = minValueNode(node.right ?: throw Exception("node.right must be not null"))
-            node = successor
+        if (current.left != null && current.right != null) {
+            val successor = minValueNode(current.left!!)
+            current.value = successor.value
+            current = successor
         }
 
-        val replacement = node.left ?: node.right
-
-        if (replacement != null) {
-            if (node.parent == null) {
-                newRoot = replacement
-            } else if (node === node.parent?.left) {
-                node.parent?.left = replacement
+        val child = if (current.left != null) current.left else current.right
+        if (child != null) {
+            child.parent = current.parent
+            if (current.parent == null) return child
+            if (current == current.parent?.left) {
+                current.parent?.left = child
             } else {
-                node.parent?.right = replacement
+                current.parent?.right = child
             }
-            if (color == RedBlackTreeNode.Color.BLACK) {
-                newRoot = fixAfterDeletion(replacement, newRoot)
+
+            if (current.color == RedBlackTreeNode.Color.BLACK) {
+                newRoot = fixAfterDeletion(child, newRoot)
             }
-        } else if (node.parent == null) {
-            newRoot = null
+        } else if (current.parent == null) {
+            return null
         } else {
-            if (color == RedBlackTreeNode.Color.BLACK) {
-                newRoot = fixAfterDeletion(node, newRoot)
+            if (current.color == RedBlackTreeNode.Color.BLACK) {
+                newRoot = fixAfterDeletion(current, newRoot)
             }
-            if (node.parent != null) {
-                if (node === node.parent?.left) {
-                    node.parent?.left = null
-                } else if (node === node.parent?.right) {
-                    node.parent?.right = null
-                }
-                node.parent = null
+            if (current.parent?.left == current) {
+                current.parent?.left = null
+            } else {
+                current.parent?.right = null
             }
         }
+
         return newRoot
     }
 
+    private fun takeColor(node: RedBlackTreeNode<E>?): RedBlackTreeNode.Color{
+        return node?.color ?: RedBlackTreeNode.Color.BLACK
+    }
 
     private fun fixAfterDeletion(node: RedBlackTreeNode<E>?, root: RedBlackTreeNode<E>?): RedBlackTreeNode<E>? {
         var newRoot = root
         var current = node
         var sibling: RedBlackTreeNode<E>?
 
-        while (current !== newRoot && current?.color == RedBlackTreeNode.Color.BLACK) {
-            if (current === current.parent?.left) {
-                sibling = current.parent?.right
-                if (sibling?.color == RedBlackTreeNode.Color.RED) {
-                    sibling.color = RedBlackTreeNode.Color.BLACK
-                    current.parent?.color = RedBlackTreeNode.Color.RED
-                    newRoot = rotateLeft(current.parent, newRoot)
-                    sibling = current.parent?.right
+        while (current !== newRoot && takeColor(current) == RedBlackTreeNode.Color.BLACK) {
+            if (current === current?.parent?.left) {
+                sibling = current?.parent?.right
+                if (takeColor(sibling) == RedBlackTreeNode.Color.RED) {
+                    sibling?.color = RedBlackTreeNode.Color.BLACK
+                    current?.parent?.color = RedBlackTreeNode.Color.RED
+                    newRoot = rotateLeft(current?.parent, newRoot)
+                    sibling = current?.parent?.right
                 }
-                if (sibling?.left?.color == RedBlackTreeNode.Color.BLACK && sibling.right?.color == RedBlackTreeNode.Color.BLACK) {
-                    sibling.color = RedBlackTreeNode.Color.RED
-                    current = current.parent
+                if (takeColor(sibling?.left) == RedBlackTreeNode.Color.BLACK && takeColor(sibling?.right) == RedBlackTreeNode.Color.BLACK) {
+                    sibling?.color = RedBlackTreeNode.Color.RED
+                    current = current?.parent
                 } else {
-                    if (sibling?.right?.color == RedBlackTreeNode.Color.BLACK) {
-                        sibling.left?.color = RedBlackTreeNode.Color.BLACK
-                        sibling.color = RedBlackTreeNode.Color.RED
+                    if (takeColor(sibling?.right) == RedBlackTreeNode.Color.BLACK) {
+                        sibling?.left?.color = RedBlackTreeNode.Color.BLACK
+                        sibling?.color = RedBlackTreeNode.Color.RED
                         newRoot = rotateRight(sibling, newRoot)
-                        sibling = current.parent?.right
+                        sibling = current?.parent?.right
                     }
-                    sibling?.color = current.parent?.color ?: RedBlackTreeNode.Color.BLACK
-                    current.parent?.color = RedBlackTreeNode.Color.BLACK
+                    sibling?.color = current?.parent?.color ?: RedBlackTreeNode.Color.BLACK
+                    current?.parent?.color = RedBlackTreeNode.Color.BLACK
                     sibling?.right?.color = RedBlackTreeNode.Color.BLACK
-                    newRoot = rotateLeft(current.parent, newRoot)
+                    newRoot = rotateLeft(current?.parent, newRoot)
                     current = newRoot
                 }
             } else {
-                sibling = current.parent?.left
-                if (sibling?.color == RedBlackTreeNode.Color.RED) {
-                    sibling.color = RedBlackTreeNode.Color.BLACK
-                    current.parent?.color = RedBlackTreeNode.Color.RED
-                    newRoot = rotateRight(current.parent, newRoot)
-                    sibling = current.parent?.left
+                sibling = current?.parent?.left
+                if (takeColor(sibling) == RedBlackTreeNode.Color.RED) {
+                    sibling?.color = RedBlackTreeNode.Color.BLACK
+                    current?.parent?.color = RedBlackTreeNode.Color.RED
+                    newRoot = rotateRight(current?.parent, newRoot)
+                    sibling = current?.parent?.left
                 }
-                if (sibling?.right?.color == RedBlackTreeNode.Color.BLACK && sibling.left?.color == RedBlackTreeNode.Color.BLACK) {
-                    sibling.color = RedBlackTreeNode.Color.RED
-                    current = current.parent
+                if (takeColor(sibling?.right) == RedBlackTreeNode.Color.BLACK && takeColor(sibling?.left) == RedBlackTreeNode.Color.BLACK) {
+                    sibling?.color = RedBlackTreeNode.Color.RED
+                    current = current?.parent
                 } else {
-                    if (sibling?.left?.color == RedBlackTreeNode.Color.BLACK) {
-                        sibling.right?.color = RedBlackTreeNode.Color.BLACK
-                        sibling.color = RedBlackTreeNode.Color.RED
+                    if (takeColor(sibling?.left) == RedBlackTreeNode.Color.BLACK) {
+                        sibling?.right?.color = RedBlackTreeNode.Color.BLACK
+                        sibling?.color = RedBlackTreeNode.Color.RED
                         newRoot = rotateLeft(sibling, newRoot)
-                        sibling = current.parent?.left
+                        sibling = current?.parent?.left
                     }
-                    sibling?.color = current.parent?.color ?: RedBlackTreeNode.Color.BLACK
-                    current.parent?.color = RedBlackTreeNode.Color.BLACK
+                    sibling?.color = current?.parent?.color ?: RedBlackTreeNode.Color.BLACK
+                    current?.parent?.color = RedBlackTreeNode.Color.BLACK
                     sibling?.left?.color = RedBlackTreeNode.Color.BLACK
-                    newRoot = rotateRight(current.parent, newRoot)
+                    newRoot = rotateRight(current?.parent, newRoot)
                     current = newRoot
+
                 }
             }
         }
         current?.color = RedBlackTreeNode.Color.BLACK
+        newRoot?.parent = null
         return newRoot
     }
 
@@ -234,7 +237,7 @@ class RBBalancer<E : Comparable<E>> : BinTreeBalancer<E, RedBlackTreeNode<E>> {
     private fun minValueNode(node: RedBlackTreeNode<E>): RedBlackTreeNode<E> {
         var current = node
         while (true) {
-            current = current.left ?: break
+            current = current.right ?: break
         }
         return current
     }
