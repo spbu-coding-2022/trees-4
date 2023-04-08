@@ -50,7 +50,7 @@ class BSTreeTest {
             assertTrue(InvariantChecker.isBinarySearchTree(tree))
         }
 
-        assertEquals(null, tree.wrappedRoot) // Tree is empty
+        assertEquals(null, tree.root) // Tree is empty
     }
 
     @Test

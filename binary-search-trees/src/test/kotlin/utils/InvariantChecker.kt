@@ -1,23 +1,22 @@
 package utils
 
+import bst.AVLTree
 import bst.BinarySearchTree
 import bst.RBTree
+import bst.node.AVLTreeNode
 import bst.node.BinTreeNode
-import bst.wrapper.WrappedAVLNode
 import bst.node.RedBlackTreeNode
-import bst.wrapper.WrappedBinNode
-import bst.wrapper.WrappedRBNode
 import java.util.*
 import kotlin.math.abs
 
 object InvariantChecker {
-    fun <E : Comparable<E>, NodeType : BinTreeNode<E, NodeType>, WrappedType : WrappedBinNode<E, WrappedType>> // python actually is better
+    fun <E : Comparable<E>, NodeType : BinTreeNode<E, NodeType>>
             isBinarySearchTree(
-        bst: BinarySearchTree<E, NodeType, WrappedType>
+        bst: BinarySearchTree<E, NodeType>
     ): Boolean {
-        var currentNode = bst.wrappedRoot
-        var prevNode: WrappedType? = null
-        val stack = Stack<WrappedType>()
+        var currentNode = bst.root
+        var prevNode: NodeType? = null
+        val stack = Stack<NodeType>()
 
         while (currentNode != null || stack.isNotEmpty()) {
             while (currentNode != null) {
@@ -37,73 +36,72 @@ object InvariantChecker {
         return true
     }
 
-    fun <E : Comparable<E>> checkNeighborHeights(node: WrappedAVLNode<E>?): Boolean {
-        if (node == null) {
-            return true
+    fun <E : Comparable<E>> checkNeighborHeights(tree: AVLTree<E>?): Boolean {
+        fun helper(node: AVLTreeNode<E>?): Boolean {
+            if (node == null) {
+                return true
+            }
+
+            val leftHeight = calculateHeight(node.left)
+            val rightHeight = calculateHeight(node.right)
+
+            if (abs(leftHeight - rightHeight) > 1) {
+                return false
+            }
+
+            return helper(node.left) && helper(node.right)
         }
-
-        val leftHeight = calculateHeight(node.left)
-        val rightHeight = calculateHeight(node.right)
-
-        if (abs(leftHeight - rightHeight) > 1) {
-            return false
-        }
-
-        return checkNeighborHeights(node.left) && checkNeighborHeights(node.right)
+        return helper(tree?.root)
     }
 
-    private fun <T : Comparable<T>> calculateHeight(node: WrappedAVLNode<T>?): Int {
+    private fun <E : Comparable<E>> calculateHeight(node: AVLTreeNode<E>?): Int {
         if (node == null) {
             return 0
         }
         val leftHeight = calculateHeight(node.left)
         val rightHeight = calculateHeight(node.right)
         return 1 + maxOf(leftHeight, rightHeight)
+    }
 
-        private fun <E : Comparable<E>> isBlack(root: WrappedRBNode<E>?): Boolean {
+
+    fun <E : Comparable<E>> isBlackHeightBalanced(tree: RBTree<E>?): Boolean {
+        fun helper(root: RedBlackTreeNode<E>?): Boolean {
             root ?: return true
-            return root.color == RedBlackTreeNode.Color.BLACK
+
+            val leftHeight = blackHeight(root.left)
+            val rightHeight = blackHeight(root.right)
+            if (leftHeight != rightHeight) {
+                return false
+            }
+
+            return helper(root.left) && helper(root.right)
+        }
+        return helper(tree?.root)
+    }
+
+    private fun <E : Comparable<E>> blackHeight(node: RedBlackTreeNode<E>?): Int {
+        if (node == null) {
+            return 0
         }
 
-        fun <E : Comparable<E>> isColoredRight(tree: RBTree<E>?): Boolean {
-            fun helper(root: WrappedRBNode<E>?): Boolean {
-                root ?: return true
-                if (root.color == RedBlackTreeNode.Color.RED && !isBlack(root.parent)
-                )
-                    return false
+        val leftHeight = blackHeight(node.left)
+        val rightHeight = blackHeight(node.right)
 
-                return helper(root.left) && helper(root.right)
-            }
-            return helper(tree?.wrappedRoot) && isBlack(tree?.wrappedRoot)
-        }
-
-        fun <E : Comparable<E>> isBlackHeightBalanced(tree: RBTree<E>?): Boolean {
-            fun helper(root: WrappedRBNode<E>?): Boolean {
-                root ?: return true
-
-                val leftHeight = blackHeight(root.left)
-                val rightHeight = blackHeight(root.right)
-                if (leftHeight != rightHeight) {
-                    return false
-                }
-
-                return helper(root.left) && helper(root.right)
-            }
-            return helper(tree?.wrappedRoot)
-        }
-
-        private fun <E : Comparable<E>> blackHeight(node: WrappedRBNode<E>?): Int {
-            if (node == null) {
-                return 0
-            }
-
-            val leftHeight = blackHeight(node.left)
-            val rightHeight = blackHeight(node.right)
-
-            return if (node.color == RedBlackTreeNode.Color.BLACK) {
-                maxOf(leftHeight, rightHeight) + 1
-            } else {
-                maxOf(leftHeight, rightHeight)
-            }
+        return if (node.color == RedBlackTreeNode.Color.BLACK) {
+            maxOf(leftHeight, rightHeight) + 1
+        } else {
+            maxOf(leftHeight, rightHeight)
         }
     }
+
+    fun <E : Comparable<E>> isParentLinkedRight(tree: RBTree<E>?): Boolean {
+        fun helper(root: RedBlackTreeNode<E>?): Boolean {
+            root ?: return true
+            if (root.parent != null && (root !== root.parent?.left && root !== root.parent?.right)) return false
+
+            return helper(root.left) && helper(root.right)
+        }
+
+        return helper(tree?.root)
+    }
+}

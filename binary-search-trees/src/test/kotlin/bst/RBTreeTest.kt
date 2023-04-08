@@ -5,7 +5,10 @@ import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
 import utils.InvariantChecker
 import kotlin.random.Random
-import kotlin.test.*
+import kotlin.test.BeforeTest
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
 class RBTreeTest {
     companion object {
@@ -28,8 +31,8 @@ class RBTreeTest {
         for (v in values) {
             tree.add(v, unique)
             assertTrue(InvariantChecker.isBinarySearchTree(tree))
-            assertTrue(InvariantChecker.isColoredRight(tree))
             assertTrue(InvariantChecker.isBlackHeightBalanced(tree))
+            assertTrue(InvariantChecker.isParentLinkedRight(tree))
         }
     }
 
@@ -49,11 +52,12 @@ class RBTreeTest {
         values.shuffle()
         for (v in values) {
             tree.remove(v)
-            assertTrue(InvariantChecker.isBinarySearchTree(tree))
-            assertTrue(InvariantChecker.isBlackHeightBalanced(tree))
+            assert(InvariantChecker.isBinarySearchTree(tree))
+            assert(InvariantChecker.isBlackHeightBalanced(tree))
+            assert(InvariantChecker.isParentLinkedRight(tree))
         }
 
-        Assertions.assertEquals(null, tree.wrappedRoot) // Tree is empty
+        Assertions.assertEquals(null, tree.root) // Tree is empty
     }
 
     @Test
