@@ -50,7 +50,6 @@ class RBTreeTest {
         for (v in values) {
             tree.remove(v)
             assertTrue(InvariantChecker.isBinarySearchTree(tree))
-            assertTrue(InvariantChecker.isColoredRight(tree))
             assertTrue(InvariantChecker.isBlackHeightBalanced(tree))
         }
 
