@@ -160,7 +160,7 @@ class RBBalancer<E : Comparable<E>> : BinTreeBalancer<E, RedBlackTreeNode<E>> {
         return newRoot
     }
 
-    private fun takeColor(node: RedBlackTreeNode<E>?): RedBlackTreeNode.Color{
+    private fun takeColor(node: RedBlackTreeNode<E>?): RedBlackTreeNode.Color {
         return node?.color ?: RedBlackTreeNode.Color.BLACK
     }
 

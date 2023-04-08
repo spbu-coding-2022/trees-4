@@ -1,5 +1,5 @@
 package bst.node
 
-interface AVLTreeNode<E : Comparable<E>> : BinTreeNode<E, AVLTreeNode<E>> {
-    var height: Int
+abstract class AVLTreeNode<E : Comparable<E>> : BinTreeNode<E, AVLTreeNode<E>>() {
+    internal abstract var height: Int
 }

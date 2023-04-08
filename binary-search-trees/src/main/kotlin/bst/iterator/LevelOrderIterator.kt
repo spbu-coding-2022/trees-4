@@ -3,7 +3,8 @@ package bst.iterator
 import bst.node.BinTreeNode
 import java.util.*
 
-internal class LevelOrderIterator<E : Comparable<E>, NodeType : BinTreeNode<E, NodeType>>(root: NodeType?) : Iterator<E> {
+internal class LevelOrderIterator<E : Comparable<E>, NodeType : BinTreeNode<E, NodeType>>(root: NodeType?) :
+    Iterator<E> {
     private val queue = LinkedList<NodeType>()
 
     init {
