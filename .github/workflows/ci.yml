@@ -16,7 +16,7 @@ jobs:
       - name: Print coverage report
         env:
           report_path: app/build/coverage/test/jacocoTestReport.csv
-          run: |
+        run: |
             awk -F"," '{ instructions += $4 + $5; covered += $5; branches += $6 + $7; branches_covered +=$7 } END { print "Instructions covered:", covered"/"instructions, "--", 100*covered/instructions"%"; print "Branches covered:", branches_covered"/"branches, "--", 100*branches_covered/branches"%" }' $report_path
 
       - name: Create fat .jar file on main
