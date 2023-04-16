@@ -2,7 +2,20 @@ plugins {
     kotlin("jvm") version "1.8.20"
     kotlin("plugin.serialization") version "1.8.20"
     id("io.ktor.plugin") version "2.2.4"
+    id("jacoco")
     application
+}
+jacoco {
+    toolVersion = "0.8.7"
+    reportsDirectory.set(layout.buildDirectory.dir("coverage"))
+
+}
+tasks.withType<JacocoReport> {
+    reports {
+        xml.required.set(true)
+        csv.required.set(true)
+        html.required.set(false)
+    }
 }
 
 repositories {
@@ -19,7 +32,9 @@ dependencies {
 
 tasks.test {
     useJUnitPlatform()
+    finalizedBy(tasks.jacocoTestReport)
 }
+
 tasks.jar {
     manifest.attributes["Main-Class"] = "app.AppKt"
 }
