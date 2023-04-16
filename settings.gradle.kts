@@ -9,4 +9,3 @@
 
 rootProject.name = "trees-4"
 include("app")
-include("binary-search-trees")
