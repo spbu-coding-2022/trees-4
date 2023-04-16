@@ -1,5 +1,6 @@
 plugins {
-    id("org.jetbrains.kotlin.jvm") version "1.8.10"
+    kotlin("jvm") version "1.8.10"
+    kotlin("plugin.serialization") version "1.8.10"
     id("io.ktor.plugin") version "2.2.4"
     application
 }
@@ -12,6 +13,8 @@ dependencies {
     testImplementation(kotlin("test"))
     testImplementation(platform("org.junit:junit-bom:5.9.2"))
     testImplementation("org.junit.jupiter:junit-jupiter")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.0")
+
 }
 
 tasks.test {
