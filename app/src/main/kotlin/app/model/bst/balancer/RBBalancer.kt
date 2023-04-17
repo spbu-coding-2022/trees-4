@@ -21,11 +21,11 @@ internal class RBBalancer<E : Comparable<E>> : BinTreeBalancer<E, RedBlackTreeNo
         }
 
         return fixAfterInsertion(newNode, addToSubtree(root))
-            ?: throw Exception("after insertion root must be not null")
+            ?: throw IllegalStateException("Root after fixup must be not null")
     }
 
     private fun rotateLeft(node: RedBlackTreeNode<E>?, root: RedBlackTreeNode<E>?): RedBlackTreeNode<E>? {
-        val rightChild = node?.right ?: throw Exception("node right must be not null")
+        val rightChild = node?.right ?: throw IllegalStateException("Node to rotate must have a right child")
         node.right = rightChild.left
 
         if (rightChild.left != null) {
@@ -50,7 +50,7 @@ internal class RBBalancer<E : Comparable<E>> : BinTreeBalancer<E, RedBlackTreeNo
     }
 
     private fun rotateRight(node: RedBlackTreeNode<E>?, root: RedBlackTreeNode<E>?): RedBlackTreeNode<E>? {
-        val leftChild = node?.left ?: throw Exception("node left must be not null")
+        val leftChild = node?.left ?: throw IllegalStateException("Node to rotate must have a left child")
         node.left = leftChild.right
 
         if (leftChild.right != null) {
@@ -61,7 +61,6 @@ internal class RBBalancer<E : Comparable<E>> : BinTreeBalancer<E, RedBlackTreeNo
         var newRoot = root
 
         if (node.parent == null) {
-            // node was the root of the tree
             newRoot = leftChild
         } else if (node === node.parent?.right) {
             node.parent?.right = leftChild
@@ -126,7 +125,7 @@ internal class RBBalancer<E : Comparable<E>> : BinTreeBalancer<E, RedBlackTreeNo
         var newRoot = root
 
         if (current.left != null && current.right != null) {
-            val successor = minValueNode(current.left!!)
+            val successor = minValueNode(current.left ?: throw IllegalStateException("Impossible to find minValueNode from node without left child"))
             current.value = successor.value
             current = successor
         }

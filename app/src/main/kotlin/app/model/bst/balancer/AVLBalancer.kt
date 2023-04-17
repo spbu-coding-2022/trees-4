@@ -6,7 +6,7 @@ import kotlin.math.max
 
 internal class AVLBalancer<E : Comparable<E>> : BinTreeBalancer<E, AVLTreeNode<E>> {
     override fun add(root: AVLTreeNode<E>?, value: E, unique: Boolean): AVLTreeNode<E> {
-        fun insertToSubtree(subtree: AVLTreeNode<E>?): AVLTreeNode<E> {
+        fun insertToSubtree(subtree: AVLTreeNode<E>?): AVLTreeNode<E>? {
             if (subtree == null) {
                 return AVLNode(value)
             }
@@ -20,9 +20,9 @@ internal class AVLBalancer<E : Comparable<E>> : BinTreeBalancer<E, AVLTreeNode<E
                 else subtree.right = insertToSubtree(subtree.right)
             }
 
-            return balance(subtree) ?: throw Exception("Balance must return not null value")
+            return balance(subtree)
         }
-        return insertToSubtree(root)
+        return insertToSubtree(root) ?: throw IllegalStateException("Root after fixup must be not null")
     }
 
     private fun balance(subtree: AVLTreeNode<E>): AVLTreeNode<E>? {
@@ -107,7 +107,7 @@ internal class AVLBalancer<E : Comparable<E>> : BinTreeBalancer<E, AVLTreeNode<E
                 return root.left ?: root.right
             } else {
                 val temp =
-                    minValueNode(root.right ?: throw Exception("root.right must be not null"))
+                    minValueNode(root.right ?: throw IllegalStateException("Impossible to find minValueNode from node without right child"))
                 root.value = temp.value
                 root.right = remove(root.right, temp.value)
             }

@@ -34,7 +34,7 @@ internal class BSBalancer<E : Comparable<E>> : BinTreeBalancer<E, BinSearchTreeN
                 return root.left ?: root.right
             } else {
                 val temp =
-                    minValueNode(root.right ?: throw Exception("root.right must be not null"))
+                    minValueNode(root.right ?: throw IllegalStateException("Impossible to find minValueNode from node without right child"))
                 root.value = temp.value
                 root.right = remove(root.right, temp.value)
             }
