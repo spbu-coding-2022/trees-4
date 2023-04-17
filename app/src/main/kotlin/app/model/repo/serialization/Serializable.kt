@@ -19,6 +19,7 @@ class SerializableNode(
 
 @Serializable
 class SerializableTree(
+    val verboseName: String,
     val typeOfTree: TypeOfTree,
     val root: SerializableNode?
 )
