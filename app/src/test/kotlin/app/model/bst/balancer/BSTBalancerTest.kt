@@ -1,15 +1,13 @@
-
 package app.model.bst.balancer
 
-
-import app.model.bst.BSTree
+import app.model.bst.node.BinSearchTreeNode
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class BSTBalancerTest {
     private val balancer = BSBalancer<Int>()
     @Test
-    fun `test method 'add' in bs tree`() {
+    fun `test method 'add' in bs balancer`() {
         var root = balancer.add(null, 5, true)
 
         root = balancer.add(root, 1, true)
@@ -38,8 +36,8 @@ class BSTBalancerTest {
     }
 
     @Test
-    fun `test method 'remove' in bs tree`() {
-        var root = balancer.add(null, 5, true)
+    fun `test method 'remove' in bs balancer`() {
+        var root: BinSearchTreeNode<Int>? = balancer.add(null, 5, true)
 
         root = balancer.add(root, 1, true)
         root = balancer.add(root , 7, true)
@@ -59,7 +57,7 @@ class BSTBalancerTest {
                3
          */
 
-        root = balancer.remove(root,5)!!
+        root = balancer.remove(root,5)
 
         /*
              constructed tree:
@@ -73,10 +71,10 @@ class BSTBalancerTest {
          */
 
 
-        assertEquals(6, root.value)
-        assertEquals(1, root.left?.value)
-        assertEquals(4, root.left?.right?.value)
-        assertEquals(7, root.right?.value)
-        assertEquals(3, root.left?.right?.left?.value)
+        assertEquals(6, root?.value)
+        assertEquals(1, root?.left?.value)
+        assertEquals(4, root?.left?.right?.value)
+        assertEquals(7, root?.right?.value)
+        assertEquals(3, root?.left?.right?.left?.value)
     }
 }
