@@ -121,7 +121,7 @@ class Neo4jRepo<E : Comparable<E>,
 
     override fun deleteByVerboseName(verboseName: String) {
         session.query(
-            "MATCH toDelete=(t:SerializableTreeEntity {typeOfTree: \$typeOfTree, verboseName : \$verboseName})-[*]->() DETACH DELETE toDelete",
+            "MATCH toDelete=(t:SerializableTreeEntity {typeOfTree: \$typeOfTree, verboseName : \$verboseName})-[*0..]->() DETACH DELETE toDelete",
             mapOf("typeOfTree" to strategy.typeOfTree, "verboseName" to verboseName)
         )
     }
