@@ -1,5 +1,6 @@
 package app.model.bst.balancer
 
+import app.model.bst.node.AVLTreeNode
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
@@ -36,13 +37,13 @@ class AVLBalancerTest {
 
     @Test
     fun `test method 'remove' in avl tree balancer`() {
-        var root = balancer?.add(null, 2, true)
-        root = balancer?.add(root, 3, true)
-        root = balancer?.add(root, 4, true)
-        root = balancer?.add(root, 5, true)
-        root = balancer?.add(root, 6, true)
-        root = balancer?.add(root, 7, true)
-        root = balancer?.add(root, 8, true)
+        var root: AVLTreeNode<Int>? = balancer.add(null, 2, true)
+        root = balancer.add(root, 3, true)
+        root = balancer.add(root, 4, true)
+        root = balancer.add(root, 5, true)
+        root = balancer.add(root, 6, true)
+        root = balancer.add(root, 7, true)
+        root = balancer.add(root, 8, true)
 
         /*
             constructed tree:
