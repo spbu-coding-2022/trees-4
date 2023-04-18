@@ -6,15 +6,16 @@ import kotlin.test.assertEquals
 
 class BSTBalancerTest {
     private val balancer = BSBalancer<Int>()
+
     @Test
     fun `test method 'add' in bs balancer`() {
         var root = balancer.add(null, 5, true)
 
         root = balancer.add(root, 1, true)
-        root = balancer.add(root , 7, true)
-        root = balancer.add(root,4, true )
-        root = balancer.add(root , 6, true)
-        root = balancer.add(root,3, true )
+        root = balancer.add(root, 7, true)
+        root = balancer.add(root, 4, true)
+        root = balancer.add(root, 6, true)
+        root = balancer.add(root, 3, true)
 
         /*
              constructed tree:
@@ -40,10 +41,10 @@ class BSTBalancerTest {
         var root: BinSearchTreeNode<Int>? = balancer.add(null, 5, true)
 
         root = balancer.add(root, 1, true)
-        root = balancer.add(root , 7, true)
-        root = balancer.add(root,4, true )
-        root = balancer.add(root , 6, true)
-        root = balancer.add(root,3, true )
+        root = balancer.add(root, 7, true)
+        root = balancer.add(root, 4, true)
+        root = balancer.add(root, 6, true)
+        root = balancer.add(root, 3, true)
 
 
         /*
@@ -57,7 +58,7 @@ class BSTBalancerTest {
                3
          */
 
-        root = balancer.remove(root,5)
+        root = balancer.remove(root, 5)
 
         /*
              constructed tree:
