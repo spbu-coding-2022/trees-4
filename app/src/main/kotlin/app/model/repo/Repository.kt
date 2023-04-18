@@ -3,6 +3,7 @@ package app.model.repo
 import app.model.bst.BinarySearchTree
 import app.model.bst.node.BinTreeNode
 import app.model.repo.serialization.SerializableNode
+import app.model.repo.serialization.SerializableTree
 import app.model.repo.serialization.strategy.SerializationStrategy
 
 abstract class Repository<E : Comparable<E>,
@@ -19,6 +20,16 @@ abstract class Repository<E : Comparable<E>,
         )
     }
 
-    abstract fun save(tree: BST)
-    abstract fun load(factory: () -> BST): BST
+
+    protected fun BST.toSerializableTree(verboseName: String): SerializableTree {
+        return SerializableTree(
+            verboseName = verboseName,
+            typeOfTree = strategy.typeOfTree,
+            root = this.root?.toSerializableNode()
+        )
+    }
+
+    abstract fun save(verboseName: String, tree: BST)
+    abstract fun loadByVerboseName(verboseName: String, factory: () -> BST): BST
+    abstract fun deleteByVerboseName(verboseName: String)
 }

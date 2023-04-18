@@ -9,11 +9,15 @@ class PostgresRepo<E : Comparable<E>,
         BST : BinarySearchTree<E, Node>>(
     strategy: SerializationStrategy<E, Node, *>
 ) : Repository<E, Node, BST>(strategy) {
-    override fun save(tree: BST) {
+    override fun save(verboseName: String, tree: BST) {
         TODO("Not yet implemented")
     }
 
-    override fun load(factory: () -> BST): BST {
+    override fun loadByVerboseName(verboseName: String, factory: () -> BST): BST {
+        TODO("Not yet implemented")
+    }
+
+    override fun deleteByVerboseName(verboseName: String) {
         TODO("Not yet implemented")
     }
 
