@@ -51,12 +51,9 @@ class SerializableTreeEntity(
 class Neo4jRepo<E : Comparable<E>,
         Node : BinTreeNode<E, Node>,
         BST : BinarySearchTree<E, Node>>(
-    strategy: SerializationStrategy<E, Node, *>
+    strategy: SerializationStrategy<E, Node, *>,
+    configuration: Configuration
 ) : Repository<E, Node, BST>(strategy) {
-    private val configuration = Configuration.Builder()
-        .uri("bolt://localhost")
-        .credentials("neo4j", "password") //TODO: use settings for this parameters
-        .build()
     private val sessionFactory = SessionFactory(configuration, "app.model.repo")
     private val session = sessionFactory.openSession()
 
