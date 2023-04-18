@@ -3,6 +3,8 @@ plugins {
     kotlin("plugin.serialization") version "1.8.20"
     id("io.ktor.plugin") version "2.2.4"
     id("jacoco")
+    id("org.jetbrains.kotlin.plugin.noarg") version "1.8.20"
+
     application
 }
 jacoco {
@@ -26,6 +28,8 @@ dependencies {
     testImplementation(kotlin("test"))
     testImplementation(platform("org.junit:junit-bom:5.9.2"))
     testImplementation("org.junit.jupiter:junit-jupiter")
+    implementation("org.neo4j:neo4j-ogm-core:4.0.5")
+    runtimeOnly("org.neo4j:neo4j-ogm-bolt-driver:4.0.5")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.0")
 
 }
@@ -38,6 +42,11 @@ tasks.test {
 tasks.jar {
     manifest.attributes["Main-Class"] = "app.AppKt"
 }
+noArg {
+    annotation("org.neo4j.ogm.annotation.NodeEntity")
+    annotation("org.neo4j.ogm.annotation.RelationshipEntity")
+}
+
 kotlin {
     jvmToolchain(8)
 }
