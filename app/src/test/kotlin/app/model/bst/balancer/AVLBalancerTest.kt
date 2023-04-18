@@ -7,6 +7,7 @@ import kotlin.test.assertNull
 
 class AVLBalancerTest {
     private val balancer = AVLBalancer<Int>()
+
     @Test
     fun `test method 'add' in avl tree balancer`() {
         var root = balancer.add(null, 2, true)

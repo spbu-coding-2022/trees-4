@@ -107,7 +107,10 @@ internal class AVLBalancer<E : Comparable<E>> : BinTreeBalancer<E, AVLTreeNode<E
                 return root.left ?: root.right
             } else {
                 val temp =
-                    minValueNode(root.right ?: throw IllegalStateException("Impossible to find minValueNode from node without right child"))
+                    minValueNode(
+                        root.right
+                            ?: throw IllegalStateException("Impossible to find minValueNode from node without right child")
+                    )
                 root.value = temp.value
                 root.right = remove(root.right, temp.value)
             }

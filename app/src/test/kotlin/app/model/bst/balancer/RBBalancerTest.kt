@@ -12,8 +12,8 @@ class RBBalancerTest {
         var root = balancer.add(null, 1, true)
 
         root = balancer.add(root, 2, true)
-        root = balancer.add(root , 3, true)
-        root = balancer.add(root,4, true )
+        root = balancer.add(root, 3, true)
+        root = balancer.add(root, 4, true)
 
 
         /*
@@ -42,8 +42,8 @@ class RBBalancerTest {
         var root: RedBlackTreeNode<Int>? = balancer.add(null, 1, true)
 
         root = balancer.add(root, 2, true)
-        root = balancer.add(root , 3, true)
-        root = balancer.add(root,4, true )
+        root = balancer.add(root, 3, true)
+        root = balancer.add(root, 4, true)
         /*
                      constructed tree:
                            2(BLACK)
@@ -54,7 +54,7 @@ class RBBalancerTest {
                  */
 
 
-        root = balancer.remove(root,2)
+        root = balancer.remove(root, 2)
 
 
         /*
