@@ -12,13 +12,20 @@ class RBTreeStrategy<E : Comparable<E>>(
     deserializeValue: (SerializableValue) -> E
 ) : SerializationStrategy<E, RedBlackTreeNode<E>, RedBlackTreeNode.Color>(serializeValue, deserializeValue) {
     override val typeOfTree: TypeOfTree = TypeOfTree.RED_BLACK_TREE
-    override fun buildNode(node: SerializableNode?): RedBlackTreeNode<E>? = node?.let {
-        RBNode(
-            value = deserializeValue(node.value),
-            left = buildNode(node.left),
-            right = buildNode(node.right),
-            color = deserializeMetadata(node.metadata)
-        )
+    override fun buildNode(node: SerializableNode?): RedBlackTreeNode<E>? {
+        fun buildNodeWithParent(node: SerializableNode?, parent: RedBlackTreeNode<E>?): RedBlackTreeNode<E>? {
+            node ?: return null
+            val rbNode = RBNode(
+                value = deserializeValue(node.value),
+                color = deserializeMetadata(node.metadata)
+            )
+            rbNode.parent = parent
+            rbNode.left = buildNodeWithParent(node.left, rbNode)
+            rbNode.right = buildNodeWithParent(node.right, rbNode)
+            return rbNode
+        }
+
+        return buildNodeWithParent(node, null)
     }
 
     override fun deserializeMetadata(metadata: Metadata): RedBlackTreeNode.Color {
