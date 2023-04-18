@@ -36,12 +36,12 @@ class AVLBalancerTest {
 
     @Test
     fun `test method 'remove' in avl tree balancer`() {
-        var root = balancer.add(null, 5, true)
+        var root = balancer.add(null, 2, true)
         root = balancer.add(root, 3, true)
-        root = balancer.add(root, 7, true)
-        root = balancer.add(root, 2, true)
         root = balancer.add(root, 4, true)
+        root = balancer.add(root, 5, true)
         root = balancer.add(root, 6, true)
+        root = balancer.add(root, 7, true)
         root = balancer.add(root, 8, true)
 
         /*
@@ -53,7 +53,7 @@ class AVLBalancerTest {
             2     4    6    8
          */
 
-        balancer.remove(root, 5)
+        root = balancer.remove(root, 5)!!
 
         /*
             constructed tree:
@@ -72,7 +72,7 @@ class AVLBalancerTest {
         assertNull(root.right?.left?.value)
         assertEquals(8, root.right?.right?.value)
 
-        balancer.remove(root, 3)
+        root = balancer.remove(root, 3)!!
 
         /*
             constructed tree:
