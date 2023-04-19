@@ -26,24 +26,31 @@ class RBTree<E : Comparable<E>> :
 Каждое из трёх доступных деревьев можно сохранить одним из следующих способов на выбор: 
 
  - PostgreSQL
- - neo4j
+ - Neo4j
 
-Пример:
+Пример Neo4j:
 ```Kotlin
+val st = AVLTreeStrategy({ SerializableValue(it.toString()) }, { it.value.toInt() })
 val repo = Neo4jRepo(
     st, Configuration.Builder()
         .uri("bolt://localhost")
         .credentials("neo4j", "password")
         .build()
 )
+```
 
-val randomizer = Random(42)
+Пример PostgreSQL:
+```Kotlin
+val db = Database.connect(
+    "jdbc:postgresql://localhost:5432/", driver = "org.postgresql.Driver",
+    user = "postgres", password = "password"
+)
 
-for (i in 0..100) {
-    val tree = AVLTree<Int>()
-    (0..10).forEach { tree.add(randomizer.nextInt(10000)) }
-    repo.save("avl-$i", tree)
-}
+val avlRepo = PostgresRepo(
+    AVLTreeStrategy({ SerializableValue(it.toString()) }, 
+    { it.value.toInt() }),
+    db
+)
 ```
 
 Поднять docker можно следующим способом: 
