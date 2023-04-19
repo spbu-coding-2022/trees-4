@@ -21,6 +21,36 @@ class RBTree<E : Comparable<E>> :
 Все наследники `BinarySearchTree` автоматически умеют выполнять поиск, вставку, удаление значений из дерева, а так же
 интерироваться по нему различными способами — выполнять inorder, preorder, levelorder обходы
 
+### Сохранение 
+
+Каждое из трёх доступных деревьев можно сохранить одним из следующих способов на выбор: 
+
+ - PostgreSQL
+ - neo4j
+
+Пример:
+```Kotlin
+val repo = Neo4jRepo(
+    st, Configuration.Builder()
+        .uri("bolt://localhost")
+        .credentials("neo4j", "password")
+        .build()
+)
+
+val randomizer = Random(42)
+
+for (i in 0..100) {
+    val tree = AVLTree<Int>()
+    (0..10).forEach { tree.add(randomizer.nextInt(10000)) }
+    repo.save("avl-$i", tree)
+}
+```
+
+Поднять docker можно следующим способом: 
+
+```
+docker compose -f "dev-docker-compose.yml" up
+```
 ## Внесение изменений
 
 Внимательно прочитайте раздел [CONTRIBUTING](./CONTRIBUTING.md).
