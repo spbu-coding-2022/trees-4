@@ -56,12 +56,27 @@ search возвращает Boolean
 
 Каждое из трёх доступных деревьев можно сохранить одним из следующих способов на выбор: 
 
+ - Json 
  - PostgreSQL
  - Neo4j
 
-Пример Neo4j:
+Пример Json:
 ```Kotlin
 val strategy = AVLTreeStrategy({ SerializableValue(it.toString()) }, { it.value.toInt() })
+val repo = JsonRepo(strategy)
+    
+val tree = AVLTree<Int>()
+    
+repo.save("myTree", tree)
+    
+repo.loadByVerboseName("myTree",::AVLTree)
+    
+repo.deleteByVerboseName("myTree")
+```
+
+Пример Neo4j:
+```Kotlin
+val strategy = RBTreeStrategy({ SerializableValue(it.toString()) }, { it.value.toInt() })
 val repo = Neo4jRepo(
     strategy, Configuration.Builder()
         .uri("bolt://localhost")
@@ -76,7 +91,6 @@ repo.save("myTree", tree)
 repo.loadByVerboseName("myTree", ::RBTree)
 
 repo.deleteByVerboseNam("myTree")
-
 ```
 
 Пример PostgreSQL:
