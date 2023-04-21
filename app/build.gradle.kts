@@ -16,7 +16,7 @@ tasks.withType<JacocoReport> {
     reports {
         xml.required.set(true)
         csv.required.set(true)
-        html.required.set(false)
+        html.required.set(true)
     }
 }
 
