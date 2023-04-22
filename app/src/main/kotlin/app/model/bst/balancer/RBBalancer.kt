@@ -126,7 +126,7 @@ internal class RBBalancer<E : Comparable<E>> : BinTreeBalancer<E, RedBlackTreeNo
 
         if (current.left != null && current.right != null) {
             val successor = minValueNode(
-                current.left
+                current.right
                     ?: throw IllegalStateException("Impossible to find minValueNode from node without left child")
             )
             current.value = successor.value
@@ -239,7 +239,7 @@ internal class RBBalancer<E : Comparable<E>> : BinTreeBalancer<E, RedBlackTreeNo
     private fun minValueNode(node: RedBlackTreeNode<E>): RedBlackTreeNode<E> {
         var current = node
         while (true) {
-            current = current.right ?: break
+            current = current.left ?: break
         }
         return current
     }

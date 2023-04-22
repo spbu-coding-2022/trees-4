@@ -94,6 +94,14 @@ object InvariantChecker {
         }
     }
 
+    /*
+    This function checks that the tree elements
+
+    point to each other correctly. For example, that
+
+    node.left.parent is the same as node
+     */
+
     fun <E : Comparable<E>> isParentLinkedRight(tree: RBTree<E>?): Boolean {
         fun helper(root: RedBlackTreeNode<E>?): Boolean {
             root ?: return true
