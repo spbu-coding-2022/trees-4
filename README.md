@@ -41,7 +41,7 @@ tree.add(1)
 
 tree.remove(2)
 
-tree.search(1)
+1 in tree // true
 ```
 
 search возвращает Boolean  
@@ -110,7 +110,7 @@ repo.deleteByVerboseNam("myTree")
 ```
 docker compose -f "dev-docker-compose.yml" up
 ```
-### Внесение изменений
+## Внесение изменений
 
 Внимательно прочитайте раздел [CONTRIBUTING](./CONTRIBUTING.md).
 
@@ -121,6 +121,6 @@ docker compose -f "dev-docker-compose.yml" up
 3. Запушьте ветку в origin (`git push origin feat/add-amazing-feature`)
 4. Откройте пулл реквест
 
-### Лицензия
+## Лицензия
 
 Этот проект используeт лицензию MIT. Подробнее в [LICENSE](./LICENSE).
