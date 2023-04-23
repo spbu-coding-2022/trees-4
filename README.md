@@ -5,15 +5,15 @@
 обеспечивает сохранение данных между сеансами работы приложения.
 
 
-## Основные фичи
+### Основные фичи
 
 1. Поддержка 3 видов (AVL, RB, BS) деревьев поиска с возможностью добавления собственных реализаций
-2. (WIP) Поддержка сохранения состояния дерева и восстановаления его из Json, Postgres и Neo4j
+2. (WIP) Поддержка сохранения состояния дерева и восстановления его из Json, Postgres и Neo4j
 3. (WIP) Визуализация различных деревьев поиска
 
-# Информация про архитектуру проекта 
+## Информация про архитектуру проекта 
 
-## Деревья поиска
+### Деревья поиска
 
 Чтобы создать новый вид дерева нужно сделать 3 действия. Написать балансировщик, возможно, особый тип `BinTreeNode` и
 создать класс отнаследованный от `BinarySearchTree`.
@@ -26,9 +26,9 @@ class RBTree<E : Comparable<E>> :
 ```
 
 Все наследники `BinarySearchTree` автоматически умеют выполнять поиск, вставку, удаление значений из дерева, а так же
-интерироваться по нему различными способами — выполнять inorder, preorder, levelorder обходы.
+итерироваться по нему различными способами — выполнять inorder, preorder, levelorder обходы.
 
-## Использование
+### Использование
 
 Создать дерево и использовать доступные для него методы можно следующим образом:
 
@@ -40,14 +40,19 @@ tree.add(5)
 tree.add(1)
 
 tree.remove(2)
+
+tree.search(1)
 ```
+
+search возвращает Boolean  
+
 
 Тип создаваемого дерева указывается одним из следующих способов: RBTree<Тип>(), AVLTree<>(), BSTree<>().
 
-Для RB, AVl, или BS дерева соответственно. 
+Для RB, AVL, или BS дерева соответственно. 
 
 
-## Сохранение 
+### Cохранение 
 
 Каждое из трёх доступных деревьев можно сохранить одним из следующих способов на выбор: 
 
@@ -56,38 +61,56 @@ tree.remove(2)
 
 Пример Neo4j:
 ```Kotlin
-val st = AVLTreeStrategy({ SerializableValue(it.toString()) }, { it.value.toInt() })
+val strategy = AVLTreeStrategy({ SerializableValue(it.toString()) }, { it.value.toInt() })
 val repo = Neo4jRepo(
-    st, Configuration.Builder()
+    strategy, Configuration.Builder()
         .uri("bolt://localhost")
         .credentials("neo4j", "password")
         .build()
 )
+
+val tree = RBTree<Int>()
+
+repo.save("myTree", tree) 
+
+repo.loadByVerboseName("myTree", ::RBTree)
+
+repo.deleteByVerboseNam("myTree")
+
 ```
 
 Пример PostgreSQL:
 ```Kotlin
-val db = Database.connect(
+val database = Database.connect(
     "jdbc:postgresql://localhost:5432/", driver = "org.postgresql.Driver",
     user = "postgres", password = "password"
 )
 
-val avlRepo = PostgresRepo(
+val repo = PostgresRepo(
     AVLTreeStrategy({ SerializableValue(it.toString()) }, 
     { it.value.toInt() }),
-    db
+    database
 )
+
+val tree = AVLTree<Int>()
+
+repo.save("myTree", tree)
+
+repo.loadByVerboseName("myTree", ::AVLTree)
+
+repo.deleteByVerboseNam("myTree")
 ```
 
-Для корректной работы базы данных приложения, а также правильного отображения деревьев необходимо поднять docker 
-compose.
- 
-Сделать это можно следующим способом: 
+Для корректной работы базы данных приложения, а также правильного отображения деревьев необходимо поднять docker.
+
+Чтобы это сделать нужно обратиться к [документации](https://docs.docker.com/desktop/).
+
+Также это сделать можно следующим способом:
 
 ```
 docker compose -f "dev-docker-compose.yml" up
 ```
-## Внесение изменений
+### Внесение изменений
 
 Внимательно прочитайте раздел [CONTRIBUTING](./CONTRIBUTING.md).
 
@@ -98,6 +121,6 @@ docker compose -f "dev-docker-compose.yml" up
 3. Запушьте ветку в origin (`git push origin feat/add-amazing-feature`)
 4. Откройте пулл реквест
 
-## Лицензия
+### Лицензия
 
-Этот проект используeт лицензию MIT. Подробнее в [LICENSE](./LICENSE)
+Этот проект используeт лицензию MIT. Подробнее в [LICENSE](./LICENSE).
