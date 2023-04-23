@@ -17,7 +17,7 @@ abstract class BinarySearchTree<E : Comparable<E>, NodeType : BinTreeNode<E, Nod
      * The balancer used to perform all magic with balance
      */
     protected val balancer: BinTreeBalancer<E, NodeType>,
-) {
+): Iterable<E> {
     /**
      * The root node of the tree.
      */
@@ -57,7 +57,7 @@ abstract class BinarySearchTree<E : Comparable<E>, NodeType : BinTreeNode<E, Nod
      *
      * @return an iterator over the elements in the tree in in-order traversal order
      */
-    operator fun iterator(): Iterator<E> {
+    override operator fun iterator(): Iterator<E> {
         return InOrderIterator(root)
     }
 
