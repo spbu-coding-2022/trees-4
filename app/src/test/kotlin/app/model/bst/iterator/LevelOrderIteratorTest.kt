@@ -1,4 +1,4 @@
-package iterator
+package app.model.bst.iterator
 
 import app.model.bst.AVLTree
 import app.model.bst.BSTree
