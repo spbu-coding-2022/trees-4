@@ -1,4 +1,4 @@
-package iterator
+package app.model.bst.iterator
 
 import app.model.bst.AVLTree
 import app.model.bst.BSTree
@@ -6,7 +6,7 @@ import app.model.bst.RBTree
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-class PreOrderIterator {
+class PreOrderIteratorTest {
     @Test
     fun `test PreOrderIterator to BSTree`() {
         val tree = BSTree<Int>()
