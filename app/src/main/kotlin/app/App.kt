@@ -1,131 +1,87 @@
-package app
-
-import app.model.bst.RBTree
-import app.model.bst.node.RedBlackTreeNode
-import app.model.repo.PostgresRepo
-import app.model.repo.serialization.SerializableValue
-import app.model.repo.serialization.strategy.RBTreeStrategy
-import org.jetbrains.exposed.sql.Database
-import kotlin.random.Random
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.DpSize
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Window
+import androidx.compose.ui.window.WindowPosition
+import androidx.compose.ui.window.application
+import androidx.compose.ui.window.rememberWindowState
+import app.view.Graph
+import app.view.model.Node
+import java.awt.Dimension
 
 fun main() {
-    val tree = RBTree<Int>()
-    val rand = Random(0)
-    val values = List(10000) { rand.nextInt(1000) }
-    values.forEach {
-        tree.add(it)
-    }
-
-    val saver = PostgresRepo(
-        RBTreeStrategy<Int>(
-            { SerializableValue(it.toString()) },
-            { it.value.toInt() }
-        ),
-        Database.connect(
-            "jdbc:postgresql://localhost:5432/",
-            driver = "org.postgresql.Driver",
-            user = "postgres",
-            password = "password"
-        )
-    )
-    saver.save("tmp", tree)
-    val a = saver.loadByVerboseName("tmp", ::RBTree)
-    println(a.iterator().asSequence().toList() == values.sorted())
-}
-
-object TreePrinter {
-    /**
-     * Print a tree
-     *
-     * @param root
-     * tree root node
-     */
-    fun <T : Comparable<T>, Node : RedBlackTreeNode<T>> print(root: Node?) {
-        val lines: MutableList<List<String?>> = ArrayList()
-        var level: MutableList<Node?> = ArrayList()
-        var next: MutableList<Node?> = ArrayList()
-        level.add(root)
-        var nn = 1
-        var widest = 0
-        while (nn != 0) {
-            val line: MutableList<String?> = ArrayList()
-            nn = 0
-            for (n in level) {
-                if (n == null) {
-                    line.add(null)
-                    next.add(null)
-                    next.add(null)
-                } else {
-                    val aa = "${n.value}${n.color}"
-                    line.add(aa)
-                    if (aa.length > widest) widest = aa.length
-                    next.add(n.left as Node?)
-                    next.add(n.right as Node?)
-                    if (n.left != null) nn++
-                    if (n.right != null) nn++
-                }
-            }
-            if (widest % 2 == 1) widest++
-            lines.add(line)
-            val tmp = level
-            level = next
-            next = tmp
-            next.clear()
-        }
-        var perpiece = lines[lines.size - 1].size * (widest + 4)
-        for (i in lines.indices) {
-            val line = lines[i]
-            val hpw = Math.floor((perpiece / 2f).toDouble()).toInt() - 1
-            if (i > 0) {
-                for (j in line.indices) {
-
-                    // split node
-                    var c = ' '
-                    if (j % 2 == 1) {
-                        if (line[j - 1] != null) {
-                            c = if (line[j] != null) '┴' else '┘'
-                        } else {
-                            if (j < line.size && line[j] != null) c = '└'
+    application {
+        Window(
+            onCloseRequest = ::exitApplication,
+            title = "graph visualizer",
+            state = rememberWindowState(
+                position = WindowPosition(alignment = Alignment.Center),
+                size = DpSize(800.dp, 800.dp),
+            ),
+        ) {
+            window.minimumSize = Dimension(800, 800)
+            MaterialTheme(
+                colorScheme = MaterialTheme.colorScheme.copy(
+                    surface = Color(red = 235, green = 235, blue = 237)
+                )
+            ) {
+                val tree = remember { getTree() }
+                Box(Modifier.fillMaxSize().background(MaterialTheme.colorScheme.surface)) {
+                    Row(
+                        modifier = Modifier.padding(20.dp)
+                    ) {
+                        Surface(
+                            modifier = Modifier.fillMaxSize().weight(4f).padding(
+                                1.dp
+                            ),
+                            shape = MaterialTheme.shapes.medium,
+                            color = Color.White
+                        ) {
+                            Graph(tree, 50.dp)
                         }
-                    }
-                    print(c)
 
-                    // lines and spaces
-                    if (line[j] == null) {
-                        for (k in 0 until perpiece - 1) {
-                            print(" ")
-                        }
-                    } else {
-                        for (k in 0 until hpw) {
-                            print(if (j % 2 == 0) " " else "─")
-                        }
-                        print(if (j % 2 == 0) "┌" else "┐")
-                        for (k in 0 until hpw) {
-                            print(if (j % 2 == 0) "─" else " ")
-                        }
                     }
                 }
-                println()
-            }
 
-            // print line of numbers
-            for (j in line.indices) {
-                var f = line[j]
-                if (f == null) f = ""
-                val gap1 = Math.ceil((perpiece / 2f - f.length / 2f).toDouble()).toInt()
-                val gap2 = Math.floor((perpiece / 2f - f.length / 2f).toDouble()).toInt()
-
-                // a number
-                for (k in 0 until gap1) {
-                    print(" ")
-                }
-                print(f)
-                for (k in 0 until gap2) {
-                    print(" ")
-                }
             }
-            println()
-            perpiece /= 2
         }
     }
 }
+
+fun getTree(): Node {
+    var x = 10.dp
+    val root = Node("abc", x, 150.dp)
+
+
+    var cur = root
+    var side = "left"
+    for (i in 1..100) {
+        x += 100.dp
+        when (side) {
+            "left" -> {
+                cur.left = Node("$i", x, 150.dp)
+                cur = cur.left!!
+                side = "right"
+            }
+
+            "right" -> {
+                cur.right = Node("$i", x, 150.dp)
+                cur = cur.right!!
+                side = "left"
+            }
+        }
+    }
+
+    return root
+}
+
