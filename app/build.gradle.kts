@@ -26,7 +26,7 @@ repositories {
 
 dependencies {
     testImplementation(kotlin("test"))
-    testImplementation(platform("org.junit:junit-bom:5.9.2"))
+    testImplementation(platform("org.junit:junit-bom:5.9.3"))
     testImplementation("org.junit.jupiter:junit-jupiter")
     implementation("org.neo4j:neo4j-ogm-core:4.0.5")
     runtimeOnly("org.neo4j:neo4j-ogm-bolt-driver:4.0.5")
