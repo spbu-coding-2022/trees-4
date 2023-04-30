@@ -1,7 +1,9 @@
-package app.view
+package app.view.graph
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.Dp
+import app.view.ScreenDrag
+import app.view.ScreenScale
 import app.view.model.Node
 
 

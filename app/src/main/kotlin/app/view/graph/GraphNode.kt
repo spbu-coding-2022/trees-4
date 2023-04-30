@@ -1,4 +1,4 @@
-package app.view
+package app.view.graph
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectDragGestures
@@ -15,6 +15,9 @@ import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
+import app.view.NodeText
+import app.view.ScreenDrag
+import app.view.ScreenScale
 import app.view.model.Node
 import kotlin.math.roundToInt
 
