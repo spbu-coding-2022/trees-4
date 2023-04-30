@@ -1,4 +1,4 @@
-package app.view
+package app.view.graph
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.fillMaxSize
@@ -7,6 +7,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
+import app.view.ScreenDrag
+import app.view.ScreenScale
 import app.view.model.Node
 
 @Composable
