@@ -20,8 +20,8 @@ class AVLBalancerTest {
                7
          */
 
-        assertEquals(8,root.value)
-        assertEquals(7,root.left?.value)
+        assertEquals(8, root.value)
+        assertEquals(7, root.left?.value)
 
         root = balancer.add(root, 6, true)
 
@@ -32,9 +32,9 @@ class AVLBalancerTest {
                6         8
          */
 
-        assertEquals(7,root.value)
-        assertEquals(6,root.left?.value)
-        assertEquals(8,root.right?.value)
+        assertEquals(7, root.value)
+        assertEquals(6, root.left?.value)
+        assertEquals(8, root.right?.value)
 
         root = balancer.add(root, 5, true)
         root = balancer.add(root, 4, true)
@@ -48,11 +48,11 @@ class AVLBalancerTest {
            4      6
         */
 
-        assertEquals(7,root.value)
-        assertEquals(5,root.left?.value)
-        assertEquals(8,root.right?.value)
-        assertEquals(4,root.left?.left?.value)
-        assertEquals(6,root.left?.right?.value)
+        assertEquals(7, root.value)
+        assertEquals(5, root.left?.value)
+        assertEquals(8, root.right?.value)
+        assertEquals(4, root.left?.left?.value)
+        assertEquals(6, root.left?.right?.value)
 
         root = balancer.add(root, 3, true)
 
@@ -65,12 +65,12 @@ class AVLBalancerTest {
              3       6     8
         */
 
-        assertEquals(5,root.value)
-        assertEquals(4,root.left?.value)
-        assertEquals(7,root.right?.value)
-        assertEquals(3,root.left?.left?.value)
-        assertEquals(6,root.right?.left?.value)
-        assertEquals(8,root.right?.right?.value)
+        assertEquals(5, root.value)
+        assertEquals(4, root.left?.value)
+        assertEquals(7, root.right?.value)
+        assertEquals(3, root.left?.left?.value)
+        assertEquals(6, root.right?.left?.value)
+        assertEquals(8, root.right?.right?.value)
 
         root = balancer.add(root, 2, true)
 
@@ -83,9 +83,9 @@ class AVLBalancerTest {
             2    4   6     8
         */
 
-        assertEquals(3,root.left?.value)
-        assertEquals(2,root.left?.left?.value)
-        assertEquals(4,root.left?.right?.value)
+        assertEquals(3, root.left?.value)
+        assertEquals(2, root.left?.left?.value)
+        assertEquals(4, root.left?.right?.value)
 
         root = balancer.add(root, 1, true)
         root = balancer.add(root, 0, true)
@@ -101,9 +101,9 @@ class AVLBalancerTest {
          0     2
         */
 
-        assertEquals(1,root.left?.left?.value)
-        assertEquals(0,root.left?.left?.left?.value)
-        assertEquals(2,root.left?.left?.right?.value)
+        assertEquals(1, root.left?.left?.value)
+        assertEquals(0, root.left?.left?.left?.value)
+        assertEquals(2, root.left?.left?.right?.value)
     }
 
     @Test
@@ -118,8 +118,8 @@ class AVLBalancerTest {
                        3
          */
 
-        assertEquals(2,root.value)
-        assertEquals(3,root.right?.value)
+        assertEquals(2, root.value)
+        assertEquals(3, root.right?.value)
 
         root = balancer.add(root, 4, true)
 
@@ -130,9 +130,9 @@ class AVLBalancerTest {
                  2     4
          */
 
-        assertEquals(3,root.value)
-        assertEquals(2,root.left?.value)
-        assertEquals(4,root.right?.value)
+        assertEquals(3, root.value)
+        assertEquals(2, root.left?.value)
+        assertEquals(4, root.right?.value)
 
         root = balancer.add(root, 5, true)
         root = balancer.add(root, 6, true)
@@ -146,9 +146,9 @@ class AVLBalancerTest {
                     4     6
          */
 
-        assertEquals(5,root.right?.value)
-        assertEquals(4,root.right?.left?.value)
-        assertEquals(6,root.right?.right?.value)
+        assertEquals(5, root.right?.value)
+        assertEquals(4, root.right?.left?.value)
+        assertEquals(6, root.right?.right?.value)
 
         root = balancer.add(root, 7, true)
 
