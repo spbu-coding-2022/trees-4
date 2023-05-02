@@ -16,6 +16,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.*
@@ -57,8 +58,6 @@ fun main() {
 fun TreeChoiceDialog() {
     var showDialog by remember { mutableStateOf(true) }
     var chosenTreeEditor: TreeEditor<*, *> by remember { mutableStateOf(BSTreeEditor()) }
-
-
     if (showDialog) {
         Dialog(
             onCloseRequest = { showDialog = false }
@@ -150,6 +149,8 @@ fun <N : BinTreeNode<String, N>, BST : BinarySearchTree<String, N>> GraphControl
     screenScale: ScreenScale,
     width: Int,
 ) {
+
+    val currentDensity = LocalDensity.current
     Box(modifier) {
         Column(Modifier.padding(10.dp).width(210.dp).verticalScroll(rememberScrollState())) {
             HiddenSettings(
@@ -165,9 +166,13 @@ fun <N : BinTreeNode<String, N>, BST : BinarySearchTree<String, N>> GraphControl
                     Row {
                         Button(
                             {
-                                screenDrag.x = width / 2 - (defaultNodeSize / 2 + (tree?.root?.x ?: 0.dp)).value
-                                screenDrag.y = defaultNodeSize.value
-                                screenScale.scale = 1f
+                                currentDensity.run {
+                                    screenDrag.x =
+                                        -(tree?.root?.x ?: 0.dp).toPx() + width / 2 - defaultNodeSize.toPx() / 2
+                                    screenDrag.y = -(tree?.root?.y ?: 0.dp).toPx() + defaultNodeSize.toPx()
+                                    screenScale.scale = 1f
+                                }
+
                             },
                             Modifier.weight(1f).fillMaxWidth(),
                             colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.tertiary)
