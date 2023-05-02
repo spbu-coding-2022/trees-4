@@ -19,6 +19,7 @@ abstract class TreeEditor<N : BinTreeNode<String, N>, BST : BinarySearchTree<Str
     abstract val tree: BST
 
     fun resetCoordinates(node: DrawableNode?) {
+        toDrawableNode(tree.root)
         node?.let {
             calcLeft(node, 0.dp, 0.dp)
             calcRight(node, 0.dp, 0.dp)
@@ -63,6 +64,7 @@ abstract class TreeEditor<N : BinTreeNode<String, N>, BST : BinarySearchTree<Str
         if (node?.left != null) calcLeft(node.left, x, y)
         if (node?.right != null) calcRight(node.right, x, y)
     }
+
     fun addToTree(value: String): DrawableNode? {
         this.tree.add(value)
         return toDrawableNode(this.tree.root).also { resetCoordinates(it) }
@@ -71,6 +73,17 @@ abstract class TreeEditor<N : BinTreeNode<String, N>, BST : BinarySearchTree<Str
     fun removeFromTree(value: String): DrawableNode? {
         this.tree.remove(value)
         return toDrawableNode(this.tree.root).also { resetCoordinates(it) }
+    }
+
+    fun findNodeInTree(value: String): DrawableNode? {
+        fun findNode(node: N?): N? {
+            node ?: return null
+            if (value == node.value) {
+                return node
+            }
+            return findNode(if (value < node.value) node.left else node.right)
+        }
+        return toDrawableNode(findNode(tree.root))
     }
 
     abstract fun toDrawableNode(node: N?): DrawableNode?

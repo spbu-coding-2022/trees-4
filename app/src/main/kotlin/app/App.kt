@@ -1,4 +1,3 @@
-
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -19,6 +18,8 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.*
+import app.model.bst.BinarySearchTree
+import app.model.bst.node.BinTreeNode
 import app.view.*
 import app.view.graph.Graph
 import app.view.model.AVLTreeEditor
@@ -80,8 +81,12 @@ fun TreeEditorView(editor: TreeEditor<*, *>) {
 }
 
 @Composable
-fun GraphControls(
-    editor: TreeEditor<*, *>, tree: DrawableTree?, modifier: Modifier, screenDrag: ScreenDrag, screenScale: ScreenScale
+fun <N : BinTreeNode<String, N>, BST : BinarySearchTree<String, N>> GraphControls(
+    editor: TreeEditor<N, BST>,
+    tree: DrawableTree?,
+    modifier: Modifier,
+    screenDrag: ScreenDrag,
+    screenScale: ScreenScale
 ) {
     Box(modifier) {
         Column(Modifier.padding(10.dp).width(210.dp).verticalScroll(rememberScrollState())) {
@@ -91,7 +96,7 @@ fun GraphControls(
                 Column {
                     InputField({ tree?.root = editor.addToTree(it) }, Icons.Default.Add)
                     InputField({ tree?.root = editor.removeFromTree(it) }, Icons.Default.Remove)
-                    InputField({ print(it) }, Icons.Default.Search)
+                    InputField({ tree?.root = editor.findNodeInTree(it) ?: tree?.root }, Icons.Default.Search)
                     Row {
                         Button(
                             {
@@ -104,6 +109,7 @@ fun GraphControls(
                         }
                         Button(
                             {
+                                tree?.root = editor.toDrawableNode(editor.tree.root)
                                 editor.resetCoordinates(tree?.root)
                             },
                             Modifier.weight(1f).fillMaxWidth(),
