@@ -17,7 +17,7 @@ abstract class BinarySearchTree<E : Comparable<E>, NodeType : BinTreeNode<E, Nod
      * The balancer used to perform all magic with balance
      */
     protected val balancer: BinTreeBalancer<E, NodeType>,
-): Iterable<E> {
+) : Iterable<E> {
     /**
      * The root node of the tree.
      */
