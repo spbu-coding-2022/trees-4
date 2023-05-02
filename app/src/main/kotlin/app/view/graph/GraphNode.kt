@@ -12,7 +12,10 @@ import androidx.compose.ui.layout.Measurable
 import androidx.compose.ui.layout.layout
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.zIndex
-import app.view.*
+import app.view.DrawableNode
+import app.view.ScreenDrag
+import app.view.ScreenScale
+import app.view.defaultNodeSize
 import kotlin.math.roundToInt
 
 @Composable
@@ -52,7 +55,7 @@ fun GraphNode(
             }
         }
     ) {
-        NodeText(
+        GraphNodeText(
             modifier = Modifier.align(Alignment.Center),
             text = node.value,
             scaleProvider = { screenScale.scale }

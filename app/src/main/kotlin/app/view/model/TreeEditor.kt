@@ -11,13 +11,14 @@ import app.model.bst.node.AVLTreeNode
 import app.model.bst.node.BinSearchTreeNode
 import app.model.bst.node.BinTreeNode
 import app.model.bst.node.RedBlackTreeNode
+import app.model.repo.serialization.TypeOfTree
 import app.view.DrawableNode
 import app.view.defaultNodeSize
 
 
 abstract class TreeEditor<N : BinTreeNode<String, N>, BST : BinarySearchTree<String, N>> {
     abstract val tree: BST
-
+    abstract val typeOfTree: TypeOfTree
     fun resetCoordinates(node: DrawableNode?) {
         node?.let {
             calcLeft(node, 0.dp, 0.dp)
@@ -89,6 +90,7 @@ abstract class TreeEditor<N : BinTreeNode<String, N>, BST : BinarySearchTree<Str
 }
 
 class BSTreeEditor : TreeEditor<BinSearchTreeNode<String>, BinarySearchTree<String, BinSearchTreeNode<String>>>() {
+    override val typeOfTree = TypeOfTree.BINARY_SEARCH_TREE
     override fun toDrawableNode(node: BinSearchTreeNode<String>?): DrawableNode? {
         return node?.let {
             DrawableNode(
@@ -104,6 +106,8 @@ class BSTreeEditor : TreeEditor<BinSearchTreeNode<String>, BinarySearchTree<Stri
 
 
 class RBTreeEditor : TreeEditor<RedBlackTreeNode<String>, BinarySearchTree<String, RedBlackTreeNode<String>>>() {
+    override val typeOfTree = TypeOfTree.RED_BLACK_TREE
+
     override fun toDrawableNode(node: RedBlackTreeNode<String>?): DrawableNode? {
         return node?.let {
             DrawableNode(
@@ -120,6 +124,8 @@ class RBTreeEditor : TreeEditor<RedBlackTreeNode<String>, BinarySearchTree<Strin
 
 
 class AVLTreeEditor : TreeEditor<AVLTreeNode<String>, BinarySearchTree<String, AVLTreeNode<String>>>() {
+    override val typeOfTree = TypeOfTree.AVL_TREE
+
     override fun toDrawableNode(node: AVLTreeNode<String>?): DrawableNode? {
         return node?.let {
             DrawableNode(
