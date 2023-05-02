@@ -70,7 +70,7 @@ class RBTreeStrategy<E : Comparable<E>>(
      */
     override fun serializeMetadata(node: RedBlackTreeNode<E>): Metadata {
         return Metadata(
-            when (node.value) {
+            when (node.color) {
                 RedBlackTreeNode.Color.RED -> "RED"
                 else -> "BLACK"
             }
