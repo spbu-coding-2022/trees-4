@@ -69,9 +69,10 @@ enum class Mode {
 }
 
 @Suppress("UNCHECKED_CAST")
-fun <N : BinTreeNode<String, N>, BST : BinarySearchTree<String, out N>> importTreeFromJson(): BST? {
+fun <N : BinTreeNode<String, N>, BST : BinarySearchTree<String, N>> importTreeFromJson(currentEditorType: TypeOfTree): BST? {
     val file = selectJsonFile(Mode.IMPORT) ?: return null
     val serializableTree = Json.decodeFromString<SerializableTree>(file.readText())
+    if (currentEditorType != serializableTree.typeOfTree) return null //can load only same types of trees
     return when (serializableTree.typeOfTree) {
         TypeOfTree.BINARY_SEARCH_TREE -> {
             val factory = { BSTree<String>() }

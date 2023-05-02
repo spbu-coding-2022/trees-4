@@ -20,6 +20,7 @@ import app.model.bst.node.BinTreeNode
 import app.view.*
 import app.view.model.TreeEditor
 import app.view.model.exportTreeToJson
+import app.view.model.importTreeFromJson
 
 
 @Composable
@@ -95,7 +96,10 @@ fun <N : BinTreeNode<String, N>, BST : BinarySearchTree<String, N>> GraphControl
                 Column {
                     Button(
                         {
-                            //editor.tree = importTreeFromJson<N, BST>()
+                            val t = importTreeFromJson<N, BST>(editor.typeOfTree) ?: return@Button
+                            editor.tree = t
+                            tree?.root = editor.toDrawableNode(editor.tree.root)
+                            editor.resetCoordinates(tree?.root)
                         },
                         Modifier.fillMaxWidth(),
                         colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.tertiary)

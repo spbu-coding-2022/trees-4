@@ -17,7 +17,7 @@ import app.view.defaultNodeSize
 
 
 abstract class TreeEditor<N : BinTreeNode<String, N>, BST : BinarySearchTree<String, N>> {
-    abstract val tree: BST
+    abstract var tree: BST
     abstract val typeOfTree: TypeOfTree
     fun resetCoordinates(node: DrawableNode?) {
         node?.let {
@@ -101,7 +101,7 @@ class BSTreeEditor : TreeEditor<BinSearchTreeNode<String>, BinarySearchTree<Stri
         }
     }
 
-    override val tree = BSTree<String>()
+    override var tree: BinarySearchTree<String, BinSearchTreeNode<String>> = BSTree<String>()
 }
 
 
@@ -119,7 +119,7 @@ class RBTreeEditor : TreeEditor<RedBlackTreeNode<String>, BinarySearchTree<Strin
         }
     }
 
-    override val tree = RBTree<String>()
+    override var tree: BinarySearchTree<String, RedBlackTreeNode<String>> = RBTree<String>()
 }
 
 
@@ -136,5 +136,5 @@ class AVLTreeEditor : TreeEditor<AVLTreeNode<String>, BinarySearchTree<String, A
         }
     }
 
-    override val tree = AVLTree<String>()
+    override var tree: BinarySearchTree<String, AVLTreeNode<String>> = AVLTree<String>()
 }
