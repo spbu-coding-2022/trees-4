@@ -20,7 +20,8 @@ fun TreeChoiceDialog() {
     var chosenTreeEditor: TreeEditor<*, *> by remember { mutableStateOf(BSTreeEditor()) }
     if (showDialog) {
         Dialog(
-            onCloseRequest = { showDialog = false }
+            onCloseRequest = { showDialog = false },
+            title = "Choose tree"
         ) {
             Column(
                 modifier = Modifier.padding(16.dp),

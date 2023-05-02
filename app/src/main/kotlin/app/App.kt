@@ -3,6 +3,7 @@ package app
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
@@ -16,11 +17,12 @@ fun main() {
     application {
         Window(
             onCloseRequest = ::exitApplication,
-            title = "graph visualizer",
+            title = "Graph visualizer",
             state = rememberWindowState(
                 position = WindowPosition(alignment = Alignment.Center),
                 size = DpSize(800.dp, 800.dp),
             ),
+            icon = painterResource("icon.png")
         ) {
             window.minimumSize = Dimension(800, 800)
             MaterialTheme(
