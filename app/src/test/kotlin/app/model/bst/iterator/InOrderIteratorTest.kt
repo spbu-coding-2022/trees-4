@@ -33,34 +33,34 @@ class InOrderIteratorTest {
         val iterator = tree.iterator()
 
         var res = iterator.next()
-        assertEquals(res,tree.root?.left?.left?.left?.value) //1
+        assertEquals(res, tree.root?.left?.left?.left?.value) //1
 
         res = iterator.next()
-        assertEquals(res,tree.root?.left?.left?.left?.right?.value) //2
+        assertEquals(res, tree.root?.left?.left?.left?.right?.value) //2
 
         res = iterator.next()
-        assertEquals(res,tree.root?.left?.left?.value) //3
+        assertEquals(res, tree.root?.left?.left?.value) //3
 
         res = iterator.next()
-        assertEquals(res,tree.root?.left?.value) //4
+        assertEquals(res, tree.root?.left?.value) //4
 
         res = iterator.next()
-        assertEquals(res,tree.root?.left?.right?.value) //5
+        assertEquals(res, tree.root?.left?.right?.value) //5
 
         res = iterator.next()
-        assertEquals(res,tree.root?.left?.right?.right?.left?.value) //6
+        assertEquals(res, tree.root?.left?.right?.right?.left?.value) //6
 
         res = iterator.next()
-        assertEquals(res,tree.root?.left?.right?.right?.value) //7
+        assertEquals(res, tree.root?.left?.right?.right?.value) //7
 
         res = iterator.next()
-        assertEquals(res,tree.root?.value) //8
+        assertEquals(res, tree.root?.value) //8
 
         res = iterator.next()
-        assertEquals(res,tree.root?.right?.left?.value) //9
+        assertEquals(res, tree.root?.right?.left?.value) //9
 
         res = iterator.next()
-        assertEquals(res,tree.root?.right?.value) //10
+        assertEquals(res, tree.root?.right?.value) //10
     }
 
     @Test
@@ -80,37 +80,37 @@ class InOrderIteratorTest {
         val iterator = tree.iterator()
 
         var res = iterator.next()
-        assertEquals(res,tree.root?.left?.left?.value) //0
+        assertEquals(res, tree.root?.left?.left?.value) //0
 
         res = iterator.next()
-        assertEquals(res,tree.root?.left?.value) //1
+        assertEquals(res, tree.root?.left?.value) //1
 
         res = iterator.next()
-        assertEquals(res,tree.root?.left?.right?.value) //2
+        assertEquals(res, tree.root?.left?.right?.value) //2
 
         res = iterator.next()
-        assertEquals(res,tree.root?.value) //3
+        assertEquals(res, tree.root?.value) //3
 
         res = iterator.next()
-        assertEquals(res,tree.root?.right?.left?.left?.value) //4
+        assertEquals(res, tree.root?.right?.left?.left?.value) //4
 
         res = iterator.next()
-        assertEquals(res,tree.root?.right?.left?.value) //5
+        assertEquals(res, tree.root?.right?.left?.value) //5
 
         res = iterator.next()
-        assertEquals(res,tree.root?.right?.left?.right?.value) //6
+        assertEquals(res, tree.root?.right?.left?.right?.value) //6
 
         res = iterator.next()
-        assertEquals(res,tree.root?.right?.value) //7
+        assertEquals(res, tree.root?.right?.value) //7
 
         res = iterator.next()
-        assertEquals(res,tree.root?.right?.right?.left?.value) //8
+        assertEquals(res, tree.root?.right?.right?.left?.value) //8
 
         res = iterator.next()
-        assertEquals(res,tree.root?.right?.right?.value) //9
+        assertEquals(res, tree.root?.right?.right?.value) //9
 
         res = iterator.next()
-        assertEquals(res,tree.root?.right?.right?.right?.value) //10
+        assertEquals(res, tree.root?.right?.right?.right?.value) //10
     }
 
     @Test
@@ -132,36 +132,36 @@ class InOrderIteratorTest {
         val iterator = tree.iterator()
 
         var res = iterator.next()
-        assertEquals(res,tree.root?.left?.left?.value) //0
+        assertEquals(res, tree.root?.left?.left?.value) //0
 
         res = iterator.next()
-        assertEquals(res,tree.root?.left?.value) //1
+        assertEquals(res, tree.root?.left?.value) //1
 
         res = iterator.next()
-        assertEquals(res,tree.root?.left?.right?.value) //2
+        assertEquals(res, tree.root?.left?.right?.value) //2
 
         res = iterator.next()
-        assertEquals(res,tree.root?.value) //3
+        assertEquals(res, tree.root?.value) //3
 
         res = iterator.next()
-        assertEquals(res,tree.root?.right?.left?.value) //4
+        assertEquals(res, tree.root?.right?.left?.value) //4
 
         res = iterator.next()
-        assertEquals(res,tree.root?.right?.value) //5
+        assertEquals(res, tree.root?.right?.value) //5
 
         res = iterator.next()
-        assertEquals(res,tree.root?.right?.right?.left?.value)//6
+        assertEquals(res, tree.root?.right?.right?.left?.value)//6
 
         res = iterator.next()
-        assertEquals(res,tree.root?.right?.right?.value) //7
+        assertEquals(res, tree.root?.right?.right?.value) //7
 
         res = iterator.next()
-        assertEquals(res,tree.root?.right?.right?.right?.left?.value) //8
+        assertEquals(res, tree.root?.right?.right?.right?.left?.value) //8
 
         res = iterator.next()
-        assertEquals(res,tree.root?.right?.right?.right?.value) //9
+        assertEquals(res, tree.root?.right?.right?.right?.value) //9
 
         res = iterator.next()
-        assertEquals(res,tree.root?.right?.right?.right?.right?.value) //10
+        assertEquals(res, tree.root?.right?.right?.right?.right?.value) //10
     }
 }

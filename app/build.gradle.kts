@@ -8,11 +8,11 @@ repositories {
 }
 
 plugins {
-    kotlin("jvm") version "1.8.20"
+    kotlin("jvm") version "1.8.0"
     id("org.jetbrains.compose") version "1.4.0"
-    kotlin("plugin.serialization") version "1.8.20"
+    kotlin("plugin.serialization") version "1.8.0"
     id("jacoco")
-    id("org.jetbrains.kotlin.plugin.noarg") version "1.8.20"
+    id("org.jetbrains.kotlin.plugin.noarg") version "1.8.0"
 }
 
 dependencies {
@@ -52,6 +52,9 @@ tasks.test {
 noArg {
     annotation("org.neo4j.ogm.annotation.NodeEntity")
     annotation("org.neo4j.ogm.annotation.RelationshipEntity")
+}
+kotlin {
+    jvmToolchain(17)
 }
 
 compose.desktop {
