@@ -121,7 +121,7 @@ internal class RBBalancer<E : Comparable<E>> : BinTreeBalancer<E, RedBlackTreeNo
     }
 
     override fun remove(root: RedBlackTreeNode<E>?, value: E): RedBlackTreeNode<E>? {
-        var current = findNode(root, value) ?: return null
+        var current = findNode(root, value) ?: return root
         var newRoot = root
 
         if (current.left != null && current.right != null) {
