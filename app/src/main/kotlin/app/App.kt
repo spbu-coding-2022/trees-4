@@ -24,6 +24,8 @@ import app.model.bst.node.BinTreeNode
 import app.view.*
 import app.view.graph.Graph
 import app.view.model.AVLTreeEditor
+import app.view.model.BSTreeEditor
+import app.view.model.RBTreeEditor
 import app.view.model.TreeEditor
 import java.awt.Dimension
 import java.lang.Integer.min
@@ -40,13 +42,51 @@ fun main() {
         ) {
             window.minimumSize = Dimension(800, 800)
             MaterialTheme(
+
                 colorScheme = MaterialTheme.colorScheme.copy(
                     surface = Color(red = 235, green = 235, blue = 237)
                 )
             ) {
-                TreeEditorView(
-                    AVLTreeEditor()
-                )
+                var showDialog by remember { mutableStateOf(true) }
+
+                if (showDialog) {
+                    Dialog(
+                        onCloseRequest = { showDialog = false },
+                        content = {
+                            Column(
+                                modifier = Modifier.padding(16.dp),
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                androidx.compose.material.Text(text = "Choose tree")
+                                Spacer(modifier = Modifier.height(16.dp))
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.SpaceEvenly
+                                ) {
+                                    androidx.compose.material.Button(
+                                        modifier = Modifier.padding(horizontal = 8.dp),
+                                        onClick = { showDialog = false; TreeEditorView(BSTreeEditor()) }
+                                    ) {
+                                        TreeEditorView(BSTreeEditor())
+                                        androidx.compose.material.Text(text = "BSTree")
+                                    }
+                                    androidx.compose.material.Button(
+                                        modifier = Modifier.padding(horizontal = 8.dp),
+                                        onClick = { showDialog = false; TreeEditorView(AVLTreeEditor()) }
+                                    ) {
+                                        androidx.compose.material.Text(text = "AVLTree")
+                                    }
+                                    androidx.compose.material.Button(
+                                        modifier = Modifier.padding(horizontal = 8.dp),
+                                        onClick = { showDialog = false; TreeEditorView(RBTreeEditor()) }
+                                    ) {
+                                        androidx.compose.material.Text(text = "RBTree")
+                                    }
+                                }
+                            }
+                        }
+                    )
+                }
             }
         }
     }
