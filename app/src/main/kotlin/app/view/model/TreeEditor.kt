@@ -19,7 +19,6 @@ abstract class TreeEditor<N : BinTreeNode<String, N>, BST : BinarySearchTree<Str
     abstract val tree: BST
 
     fun resetCoordinates(node: DrawableNode?) {
-        toDrawableNode(tree.root)
         node?.let {
             calcLeft(node, 0.dp, 0.dp)
             calcRight(node, 0.dp, 0.dp)

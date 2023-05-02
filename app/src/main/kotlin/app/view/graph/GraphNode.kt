@@ -44,7 +44,7 @@ fun GraphNode(
             shape = CircleShape
         )
 
-        .pointerInput(node.value, screenScale) {
+        .pointerInput(node, screenScale) {
             detectDragGestures { change, dragAmount ->
                 change.consume()
                 node.x += (dragAmount.x / screenScale.scale).toDp()
