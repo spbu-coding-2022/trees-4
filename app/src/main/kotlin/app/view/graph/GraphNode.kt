@@ -4,7 +4,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -12,20 +11,14 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.Measurable
 import androidx.compose.ui.layout.layout
 import androidx.compose.ui.unit.Constraints
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
-import app.view.NodeText
-import app.view.ScreenDrag
-import app.view.ScreenScale
-import app.view.model.Node
+import app.view.*
 import kotlin.math.roundToInt
 
 @Composable
 fun GraphNode(
     modifier: Modifier = Modifier,
-    node: Node,
-    nodeSize: Dp = 50.dp,
+    node: DrawableNode,
     screenDrag: ScreenDrag,
     screenScale: ScreenScale
 ) {
@@ -34,8 +27,8 @@ fun GraphNode(
         .layout { measurable: Measurable, _: Constraints ->
             val placeable = measurable.measure(
                 Constraints.fixed(
-                    (nodeSize * screenScale.scale).roundToPx(),
-                    (nodeSize * screenScale.scale).roundToPx()
+                    (defaultNodeSize * screenScale.scale).roundToPx(),
+                    (defaultNodeSize * screenScale.scale).roundToPx()
                 )
             )
 
@@ -47,7 +40,7 @@ fun GraphNode(
             }
         }
         .background(
-            color = MaterialTheme.colorScheme.primary,
+            color = node.color,
             shape = CircleShape
         )
 
