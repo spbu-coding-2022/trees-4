@@ -35,6 +35,9 @@ dependencies {
     implementation("org.jetbrains.exposed", "exposed-core", "0.40.1")
     implementation("org.jetbrains.exposed", "exposed-dao", "0.40.1")
     implementation("org.jetbrains.exposed", "exposed-jdbc", "0.40.1")
+    implementation("com.sksamuel.hoplite:hoplite-core:2.7.2")
+    implementation("com.sksamuel.hoplite:hoplite-json:2.7.4")
+    implementation("com.sksamuel.hoplite:hoplite-yaml:2.7.4")
 
 }
 
@@ -51,10 +54,13 @@ noArg {
     annotation("org.neo4j.ogm.annotation.RelationshipEntity")
 }
 
-kotlin {
-    jvmToolchain(8)
-}
 application {
     // Define the main class for the application.
     mainClass.set("app.AppKt")
+}
+
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
+    kotlinOptions {
+        jvmTarget = "11"
+    }
 }
