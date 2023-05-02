@@ -47,49 +47,65 @@ fun main() {
                     surface = Color(red = 235, green = 235, blue = 237)
                 )
             ) {
-                var showDialog by remember { mutableStateOf(true) }
+                TreeChoiceDialog()
+            }
+        }
+    }
+}
 
-                if (showDialog) {
-                    Dialog(
-                        onCloseRequest = { showDialog = false },
-                        content = {
-                            Column(
-                                modifier = Modifier.padding(16.dp),
-                                horizontalAlignment = Alignment.CenterHorizontally
-                            ) {
-                                androidx.compose.material.Text(text = "Choose tree")
-                                Spacer(modifier = Modifier.height(16.dp))
-                                Row(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    horizontalArrangement = Arrangement.SpaceEvenly
-                                ) {
-                                    androidx.compose.material.Button(
-                                        modifier = Modifier.padding(horizontal = 8.dp),
-                                        onClick = { showDialog = false; TreeEditorView(BSTreeEditor()) }
-                                    ) {
-                                        TreeEditorView(BSTreeEditor())
-                                        androidx.compose.material.Text(text = "BSTree")
-                                    }
-                                    androidx.compose.material.Button(
-                                        modifier = Modifier.padding(horizontal = 8.dp),
-                                        onClick = { showDialog = false; TreeEditorView(AVLTreeEditor()) }
-                                    ) {
-                                        androidx.compose.material.Text(text = "AVLTree")
-                                    }
-                                    androidx.compose.material.Button(
-                                        modifier = Modifier.padding(horizontal = 8.dp),
-                                        onClick = { showDialog = false; TreeEditorView(RBTreeEditor()) }
-                                    ) {
-                                        androidx.compose.material.Text(text = "RBTree")
-                                    }
-                                }
-                            }
+@Composable
+fun TreeChoiceDialog() {
+    var showDialog by remember { mutableStateOf(true) }
+    var chosenTreeEditor: TreeEditor<*, *> by remember { mutableStateOf(BSTreeEditor()) }
+
+
+    if (showDialog) {
+        Dialog(
+            onCloseRequest = { showDialog = false }
+        ) {
+            Column(
+                modifier = Modifier.padding(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                androidx.compose.material.Text(text = "Choose tree")
+                Spacer(modifier = Modifier.height(16.dp))
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceEvenly
+                ) {
+                    androidx.compose.material.Button(
+                        modifier = Modifier.padding(horizontal = 8.dp),
+                        onClick = {
+                            showDialog = false
+                            chosenTreeEditor = BSTreeEditor()
                         }
-                    )
+                    ) {
+                        androidx.compose.material.Text(text = "BSTree")
+                    }
+                    androidx.compose.material.Button(
+                        modifier = Modifier.padding(horizontal = 8.dp),
+                        onClick = {
+                            showDialog = false
+                            chosenTreeEditor = AVLTreeEditor()
+                        }
+                    ) {
+                        androidx.compose.material.Text(text = "AVLTree")
+                    }
+                    androidx.compose.material.Button(
+                        modifier = Modifier.padding(horizontal = 8.dp),
+                        onClick = {
+                            showDialog = false
+                            chosenTreeEditor = RBTreeEditor()
+                        }
+                    ) {
+                        androidx.compose.material.Text(text = "RBTree")
+                    }
                 }
             }
         }
     }
+
+    TreeEditorView(chosenTreeEditor)
 }
 
 
