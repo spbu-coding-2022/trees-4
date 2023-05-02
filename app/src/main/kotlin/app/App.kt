@@ -15,6 +15,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.*
@@ -69,13 +70,16 @@ fun TreeEditorView(editor: TreeEditor<*, *>) {
 
     val screenDrag = remember { ScreenDrag(0f, 0f) }
     val screenScale = remember { ScreenScale(1f, Offset(0f, 0f)) }
+    var graphViewWidth by remember { mutableStateOf(0) }
 
-    Box(Modifier.fillMaxSize().background(MaterialTheme.colorScheme.surface)) {
+    Box(Modifier.fillMaxSize().background(MaterialTheme.colorScheme.surface).onSizeChanged {
+        graphViewWidth = it.width
+    }) {
         Graph(drawableTree, screenDrag, screenScale)
         GraphControls(
             editor, drawableTree, Modifier.padding(10.dp).align(Alignment.TopEnd).clip(
                 RoundedCornerShape(10.dp)
-            ).background(Color.LightGray), screenDrag, screenScale
+            ).background(Color.LightGray), screenDrag, screenScale, graphViewWidth
         )
     }
 }
@@ -86,7 +90,8 @@ fun <N : BinTreeNode<String, N>, BST : BinarySearchTree<String, N>> GraphControl
     tree: DrawableTree?,
     modifier: Modifier,
     screenDrag: ScreenDrag,
-    screenScale: ScreenScale
+    screenScale: ScreenScale,
+    width: Int,
 ) {
     Box(modifier) {
         Column(Modifier.padding(10.dp).width(210.dp).verticalScroll(rememberScrollState())) {
@@ -96,11 +101,16 @@ fun <N : BinTreeNode<String, N>, BST : BinarySearchTree<String, N>> GraphControl
                 Column {
                     InputField({ tree?.root = editor.addToTree(it) }, Icons.Default.Add)
                     InputField({ tree?.root = editor.removeFromTree(it) }, Icons.Default.Remove)
-                    InputField({ tree?.root = editor.findNodeInTree(it) ?: tree?.root }, Icons.Default.Search)
+                    InputField({
+                        tree?.root = editor.findNodeInTree(it)
+                        editor.resetCoordinates(tree?.root)
+                    }, Icons.Default.Search)
                     Row {
                         Button(
                             {
-
+                                screenDrag.x = width / 2 - (defaultNodeSize / 2 + (tree?.root?.x ?: 0.dp)).value
+                                screenDrag.y = defaultNodeSize.value
+                                screenScale.scale = 1f
                             },
                             Modifier.weight(1f).fillMaxWidth(),
                             colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.tertiary)
