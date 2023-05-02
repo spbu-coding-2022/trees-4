@@ -1,0 +1,12 @@
+postgresHost: localhost
+postgresPort: 5432
+postgresDatabase: database
+postgresUsername: postgres
+postgresPassword: password
+
+neo4jUri: bolt://localhost
+neo4jUsername: neo4j
+neo4jPassword: password
+
+
+
