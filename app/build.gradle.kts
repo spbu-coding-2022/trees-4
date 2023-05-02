@@ -8,7 +8,7 @@ repositories {
 }
 
 plugins {
-    kotlin("jvm") version "1.8.0"
+    kotlin("jvm") version "1.8.21"
     id("org.jetbrains.compose") version "1.4.0"
     kotlin("plugin.serialization") version "1.8.0"
     id("jacoco")
