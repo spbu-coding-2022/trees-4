@@ -1,6 +1,5 @@
 package app.view.graph
 
-import DrawableTree
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
@@ -11,6 +10,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.input.pointer.PointerEventType
 import androidx.compose.ui.input.pointer.onPointerEvent
 import androidx.compose.ui.input.pointer.pointerInput
+import app.view.DrawableTree
 import app.view.ScreenDrag
 import app.view.ScreenScale
 import kotlin.math.max
