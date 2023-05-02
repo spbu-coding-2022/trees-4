@@ -12,18 +12,12 @@ import java.io.File
 class JsonRepo<E : Comparable<E>,
         Node : BinTreeNode<E, Node>,
         BST : BinarySearchTree<E, Node>>(
-    strategy: SerializationStrategy<E, Node, *>
+    strategy: SerializationStrategy<E, Node, *>,
+    private val file: File,
 ) : Repository<E, Node, BST>(strategy) {
-    private val savingDirectory: String
-        get() {
-            val sC = File.separatorChar
-            return "app${sC}src${sC}main${sC}resources${sC}"
-        }
-
     override fun save(verboseName: String, tree: BST) {
         try {
             val json = Json.encodeToString(tree.toSerializableTree(verboseName))
-            val file = File("$savingDirectory$verboseName.json")
             file.writeText(json)
         } catch (e: Exception) {
             throw IllegalArgumentException("Impossible to save tree with provided verbose name")
@@ -32,7 +26,6 @@ class JsonRepo<E : Comparable<E>,
 
     override fun loadByVerboseName(verboseName: String, factory: () -> BST): BST {
         try {
-            val file = File("$savingDirectory$verboseName.json")
             val json = file.readText()
             val serializableTree = Json.decodeFromString<SerializableTree>(json)
             return factory().apply { root = strategy.buildNode(serializableTree.root) }
@@ -43,7 +36,6 @@ class JsonRepo<E : Comparable<E>,
 
     override fun deleteByVerboseName(verboseName: String) {
         try {
-            val file = File("$savingDirectory$verboseName.json")
             file.delete()
         } catch (e: Exception) {
             throw IllegalArgumentException("Impossible to delete tree with provided verbose name")

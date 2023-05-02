@@ -19,6 +19,7 @@ import app.model.bst.BinarySearchTree
 import app.model.bst.node.BinTreeNode
 import app.view.*
 import app.view.model.TreeEditor
+import app.view.model.exportTreeToJson
 
 
 @Composable
@@ -77,56 +78,29 @@ fun <N : BinTreeNode<String, N>, BST : BinarySearchTree<String, N>> GraphControl
             ) {
                 Column {
                     Button(
-                        {},
+                        {
+                            exportTreeToJson(editor.tree, editor.typeOfTree)
+                        },
                         Modifier.fillMaxWidth(),
                         colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.tertiary)
                     ) {
                         Text("Json")
                     }
-                    Button(
-                        {},
-                        Modifier.fillMaxWidth(),
-                        colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.tertiary)
-                    ) {
-                        Text("Neo4j")
-                    }
-                    Button(
-                        {},
-                        Modifier.fillMaxWidth(),
-                        colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.tertiary)
-                    ) {
-                        Text("Postgresql")
-                    }
                 }
             }
-
 
             HiddenSettings(
                 "Load tree from...", hidden = true
             ) {
                 Column {
                     Button(
-                        {},
-                        Modifier.fillMaxWidth(),
-                        colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.tertiary)
-                    ) {
-                        Text("Json")
-                    }
-                    Button(
-                        {},
-                        Modifier.fillMaxWidth(),
-                        colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.tertiary)
-                    ) {
-                        Text("Neo4j")
-                    }
-                    Button(
                         {
-
+                            //editor.tree = importTreeFromJson<N, BST>()
                         },
                         Modifier.fillMaxWidth(),
                         colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.tertiary)
                     ) {
-                        Text("Postgresql")
+                        Text("Json")
                     }
                 }
             }
