@@ -1,3 +1,4 @@
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -18,10 +19,10 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.*
-import app.view.ScreenDrag
-import app.view.ScreenScale
+import app.view.*
 import app.view.graph.Graph
-import app.view.model.Node
+import app.view.model.AVLTreeEditor
+import app.view.model.TreeEditor
 import java.awt.Dimension
 
 fun main() {
@@ -40,59 +41,101 @@ fun main() {
                     surface = Color(red = 235, green = 235, blue = 237)
                 )
             ) {
-                val tree = remember { getTree() }
-                val screenDrag = remember { ScreenDrag(0f, 0f) }
-                val screenScale = remember { ScreenScale(1f, Offset(0f, 0f)) }
-
-
-                Box(Modifier.fillMaxSize().background(MaterialTheme.colorScheme.surface)) {
-                    Graph(tree, 50.dp, screenDrag, screenScale)
-                    GraphControls(
-                        Modifier.padding(10.dp).align(Alignment.TopEnd).clip(
-                            RoundedCornerShape(10.dp)
-                        ).background(Color.LightGray), screenDrag, screenScale
-                    )
-                }
+                TreeEditorView(
+                    AVLTreeEditor()
+                )
             }
         }
     }
 }
 
 
+class DrawableTree(
+    root: DrawableNode?
+) {
+    var root by mutableStateOf(root)
+}
+
 @Composable
-fun GraphControls(modifier: Modifier, screenDrag: ScreenDrag, screenScale: ScreenScale) {
+fun TreeEditorView(editor: TreeEditor<*, *>) {
+    val drawableTree by remember {
+        mutableStateOf(
+            DrawableTree(
+                null
+            )
+        )
+    }
+
+    val screenDrag = remember { ScreenDrag(0f, 0f) }
+    val screenScale = remember { ScreenScale(1f, Offset(0f, 0f)) }
+
+    Box(Modifier.fillMaxSize().background(MaterialTheme.colorScheme.surface)) {
+        Graph(drawableTree, screenDrag, screenScale)
+        GraphControls(
+            editor, drawableTree, Modifier.padding(10.dp).align(Alignment.TopEnd).clip(
+                RoundedCornerShape(10.dp)
+            ).background(Color.LightGray), screenDrag, screenScale
+        )
+    }
+}
+
+@Composable
+fun GraphControls(
+    editor: TreeEditor<*, *>, tree: DrawableTree?, modifier: Modifier, screenDrag: ScreenDrag, screenScale: ScreenScale
+) {
     Box(modifier) {
         Column(Modifier.padding(10.dp).width(210.dp).verticalScroll(rememberScrollState())) {
             HiddenSettings(
-                "Tree operations",
-                hidden = false
+                "Tree operations", hidden = false
             ) {
                 Column {
-                    InputField({ print(it) }, Icons.Default.Add)
-                    InputField({ print(it) }, Icons.Default.Remove)
+                    InputField({ tree?.root = editor.addToTree(it) }, Icons.Default.Add)
+                    InputField({ tree?.root = editor.removeFromTree(it) }, Icons.Default.Remove)
                     InputField({ print(it) }, Icons.Default.Search)
+                    Row {
+                        Button(
+                            {
+
+                            },
+                            Modifier.weight(1f).fillMaxWidth(),
+                            colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.tertiary)
+                        ) {
+                            Text("Reset view")
+                        }
+                        Button(
+                            {
+                                editor.resetCoordinates(tree?.root)
+                            },
+                            Modifier.weight(1f).fillMaxWidth(),
+                            colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.tertiary)
+                        ) {
+                            Text("Reset tree")
+                        }
+                    }
                 }
             }
 
             HiddenSettings(
-                "Save tree to...",
-                hidden = true
+                "Save tree to...", hidden = true
             ) {
                 Column {
                     Button(
-                        {}, Modifier.fillMaxWidth(),
+                        {},
+                        Modifier.fillMaxWidth(),
                         colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.tertiary)
                     ) {
                         Text("Json")
                     }
                     Button(
-                        {}, Modifier.fillMaxWidth(),
+                        {},
+                        Modifier.fillMaxWidth(),
                         colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.tertiary)
                     ) {
                         Text("Neo4j")
                     }
                     Button(
-                        {}, Modifier.fillMaxWidth(),
+                        {},
+                        Modifier.fillMaxWidth(),
                         colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.tertiary)
                     ) {
                         Text("Postgresql")
@@ -102,24 +145,28 @@ fun GraphControls(modifier: Modifier, screenDrag: ScreenDrag, screenScale: Scree
 
 
             HiddenSettings(
-                "Load tree from...",
-                hidden = true
+                "Load tree from...", hidden = true
             ) {
                 Column {
                     Button(
-                        {}, Modifier.fillMaxWidth(),
+                        {},
+                        Modifier.fillMaxWidth(),
                         colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.tertiary)
                     ) {
                         Text("Json")
                     }
                     Button(
-                        {}, Modifier.fillMaxWidth(),
+                        {},
+                        Modifier.fillMaxWidth(),
                         colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.tertiary)
                     ) {
                         Text("Neo4j")
                     }
                     Button(
-                        {}, Modifier.fillMaxWidth(),
+                        {
+
+                        },
+                        Modifier.fillMaxWidth(),
                         colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.tertiary)
                     ) {
                         Text("Postgresql")
@@ -128,7 +175,6 @@ fun GraphControls(modifier: Modifier, screenDrag: ScreenDrag, screenScale: Scree
             }
         }
     }
-
 }
 
 
@@ -143,65 +189,27 @@ fun InputField(action: (String) -> Unit, icon: ImageVector) {
             onValueChange = { text = it },
             modifier = Modifier.width(150.dp).height(50.dp).padding(end = 5.dp),
         )
-        IconButton(
-            onClick = { action(text) },
-            modifier = Modifier.background(
-                color = MaterialTheme.colorScheme.tertiary,
-                shape = RoundedCornerShape(8.dp)
-            ).size(50.dp),
-            content = {
-                Icon(
-                    imageVector = icon,
-                    contentDescription = null,
-                    tint = Color.White
-                )
-            }
-        )
+        IconButton(onClick = { action(text) }, modifier = Modifier.background(
+            color = MaterialTheme.colorScheme.tertiary, shape = RoundedCornerShape(8.dp)
+        ).size(50.dp), content = {
+            Icon(
+                imageVector = icon, contentDescription = null, tint = Color.White
+            )
+        })
     }
-}
-
-fun getTree(): Node {
-    var x = 10.dp
-    val root = Node("abc", x, 150.dp)
-
-
-    var cur = root
-    var side = "left"
-    for (i in 1..100) {
-        x += 100.dp
-        when (side) {
-            "left" -> {
-                cur.left = Node("$i", x, 150.dp)
-                cur = cur.left!!
-                side = "right"
-            }
-
-            "right" -> {
-                cur.right = Node("$i", x, 150.dp)
-                cur = cur.right!!
-                side = "left"
-            }
-        }
-    }
-
-    return root
 }
 
 @Composable
 fun HiddenSettings(text: String, hidden: Boolean = true, content: @Composable () -> Unit) {
     var expanded by remember { mutableStateOf(!hidden) }
 
-    Button(
-        modifier = Modifier.fillMaxWidth(),
-        onClick = { expanded = !expanded }
-    ) {
+    Button(modifier = Modifier.fillMaxWidth(), onClick = { expanded = !expanded }) {
         Text(text)
     }
 
     Row(verticalAlignment = Alignment.CenterVertically) {
         if (expanded) {
             content()
-
         }
     }
 }

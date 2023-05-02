@@ -6,29 +6,28 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.Dp
+import app.view.DrawableNode
 import app.view.ScreenDrag
 import app.view.ScreenScale
-import app.view.model.Node
+import app.view.defaultNodeSize
 
 @Composable
 fun GraphLine(
     modifier: Modifier = Modifier,
-    start: Node,
-    end: Node,
-    nodeSize: Dp,
+    start: DrawableNode,
+    end: DrawableNode,
     screenDrag: ScreenDrag,
     screenScale: ScreenScale
 ) {
     Canvas(modifier = modifier.fillMaxSize()) {
         drawLine(
             start = Offset(
-                ((start.x + nodeSize / 2).toPx() + screenDrag.x) * screenScale.scale + screenScale.posRelXYScale.x,
-                ((start.y + nodeSize / 2).toPx() + screenDrag.y) * screenScale.scale + screenScale.posRelXYScale.y,
+                ((start.x + defaultNodeSize / 2).toPx() + screenDrag.x) * screenScale.scale + screenScale.posRelXYScale.x,
+                ((start.y + defaultNodeSize / 2).toPx() + screenDrag.y) * screenScale.scale + screenScale.posRelXYScale.y,
             ),
             end = Offset(
-                ((end.x + nodeSize / 2).toPx() + screenDrag.x) * screenScale.scale + screenScale.posRelXYScale.x,
-                ((end.y + nodeSize / 2).toPx() + screenDrag.y) * screenScale.scale + screenScale.posRelXYScale.y,
+                ((end.x + defaultNodeSize / 2).toPx() + screenDrag.x) * screenScale.scale + screenScale.posRelXYScale.x,
+                ((end.y + defaultNodeSize / 2).toPx() + screenDrag.y) * screenScale.scale + screenScale.posRelXYScale.y,
             ),
             strokeWidth = 2f * screenScale.scale,
             color = Color.Black

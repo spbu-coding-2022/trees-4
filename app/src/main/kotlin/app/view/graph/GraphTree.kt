@@ -1,47 +1,31 @@
 package app.view.graph
 
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.unit.Dp
+import app.view.DrawableNode
 import app.view.ScreenDrag
 import app.view.ScreenScale
-import app.view.model.Node
 
 
 @Composable
 fun Tree(
-    rootNode: Node?,
-    nodeSize: Dp,
+    rootNode: DrawableNode?,
     screenDrag: ScreenDrag,
     screenScale: ScreenScale,
+    parent: DrawableNode? = null
 ) {
-    val stack = mutableListOf<Node?>()
-    stack.add(rootNode)
-    var currentParent: Node? = null
-
-    while (stack.isNotEmpty()) {
-        val currentNode = stack.removeLast()
-
-        currentNode?.let { node ->
-            currentParent?.let { parent ->
-                GraphLine(
-                    start = parent,
-                    end = node,
-                    nodeSize = nodeSize,
-                    screenDrag = screenDrag,
-                    screenScale = screenScale
-                )
-            }
-
-            stack.add(node.right)
-            stack.add(node.left)
-            currentParent = node
-
-            GraphNode(
-                node = node,
+    rootNode?.let {
+        parent?.let { parent ->
+            GraphLine(
+                start = parent,
+                end = it,
                 screenDrag = screenDrag,
-                screenScale = screenScale,
-                nodeSize = nodeSize
+                screenScale = screenScale
             )
         }
+
+        Tree(rootNode.left, screenDrag, screenScale, it)
+        Tree(rootNode.right, screenDrag, screenScale, it)
+
+        GraphNode(node = rootNode, screenDrag = screenDrag, screenScale = screenScale)
     }
 }
