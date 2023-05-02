@@ -26,6 +26,7 @@ import app.view.graph.Graph
 import app.view.model.AVLTreeEditor
 import app.view.model.TreeEditor
 import java.awt.Dimension
+import java.lang.Integer.min
 
 fun main() {
     application {
@@ -202,8 +203,11 @@ fun InputField(action: (String) -> Unit, icon: ImageVector) {
     Row(Modifier.padding(5.dp)) {
         OutlinedTextField(
             value = text,
-            onValueChange = { text = it },
+            onValueChange = { it ->
+                text = it.slice(0..min(10, it.length - 1))
+            },
             modifier = Modifier.width(150.dp).height(50.dp).padding(end = 5.dp),
+            maxLines = 1
         )
         IconButton(onClick = { action(text) }, modifier = Modifier.background(
             color = MaterialTheme.colorScheme.tertiary, shape = RoundedCornerShape(8.dp)

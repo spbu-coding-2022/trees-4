@@ -15,7 +15,7 @@ fun NodeText(
 ) {
     Text(
         modifier = modifier,
-        text = text,
+        text = if (text.length > 4) text.substring(0, 4) + ".." else text,
         color = MaterialTheme.colorScheme.onPrimary,
         style = style.copy(
             fontSize = style.fontSize * scaleProvider(),
