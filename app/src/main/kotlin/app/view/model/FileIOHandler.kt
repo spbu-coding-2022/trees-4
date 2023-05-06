@@ -1,5 +1,6 @@
 package app.view.model
 
+import androidx.compose.foundation.layout.*
 import androidx.compose.ui.awt.ComposeWindow
 import app.model.bst.AVLTree
 import app.model.bst.BSTree
@@ -70,27 +71,31 @@ enum class Mode {
 
 @Suppress("UNCHECKED_CAST")
 fun <N : BinTreeNode<String, N>, BST : BinarySearchTree<String, N>> importTreeFromJson(currentEditorType: TypeOfTree): BST? {
-    val file = selectJsonFile(Mode.IMPORT) ?: return null
-    val serializableTree = Json.decodeFromString<SerializableTree>(file.readText())
-    if (currentEditorType != serializableTree.typeOfTree) return null //can load only same types of trees
-    return when (serializableTree.typeOfTree) {
-        TypeOfTree.BINARY_SEARCH_TREE -> {
-            val factory = { BSTree<String>() }
-            val strategy = BSTreeStrategy({ SerializableValue(it) }, { it.value })
-            JsonRepo(strategy, file).loadByVerboseName(file.name, factory) as BST
-        }
+    try {
+        val file = selectJsonFile(Mode.IMPORT) ?: return null
+        val serializableTree = Json.decodeFromString<SerializableTree>(file.readText())
+        if (currentEditorType != serializableTree.typeOfTree) return null //can load only same types of trees
+        return when (serializableTree.typeOfTree) {
+            TypeOfTree.BINARY_SEARCH_TREE -> {
+                val factory = { BSTree<String>() }
+                val strategy = BSTreeStrategy({ SerializableValue(it) }, { it.value })
+                JsonRepo(strategy, file).loadByVerboseName(file.name, factory) as BST
+            }
 
-        TypeOfTree.RED_BLACK_TREE -> {
-            val factory = { RBTree<String>() }
-            val strategy = RBTreeStrategy({ SerializableValue(it) }, { it.value })
-            JsonRepo(strategy, file).loadByVerboseName(file.name, factory) as BST
-        }
+            TypeOfTree.RED_BLACK_TREE -> {
+                val factory = { RBTree<String>() }
+                val strategy = RBTreeStrategy({ SerializableValue(it) }, { it.value })
+                JsonRepo(strategy, file).loadByVerboseName(file.name, factory) as BST
+            }
 
-        TypeOfTree.AVL_TREE -> {
-            val factory = { AVLTree<String>() }
-            val strategy = AVLTreeStrategy({ SerializableValue(it) }, { it.value })
-            JsonRepo(strategy, file).loadByVerboseName(file.name, factory) as BST
+            TypeOfTree.AVL_TREE -> {
+                val factory = { AVLTree<String>() }
+                val strategy = AVLTreeStrategy({ SerializableValue(it) }, { it.value })
+                JsonRepo(strategy, file).loadByVerboseName(file.name, factory) as BST
+            }
         }
+    } catch (c: Exception) {
+        return null
     }
 }
 
