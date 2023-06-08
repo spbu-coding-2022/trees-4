@@ -12,7 +12,7 @@ plugins {
     id("org.jetbrains.compose") version "1.4.0"
     kotlin("plugin.serialization") version "1.8.0"
     id("jacoco")
-    id("org.jetbrains.kotlin.plugin.noarg") version "1.8.0"
+    id("org.jetbrains.kotlin.plugin.noarg") version "1.8.22"
 }
 
 dependencies {
